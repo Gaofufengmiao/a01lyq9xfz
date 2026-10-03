@@ -6,7 +6,7 @@
     <title>章鱼喷墨机</title>
     <meta name="theme-color" content="#ffffff"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="UwU" />
+    <meta name="apple-mobile-web-app-title" content="Read" />
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" href="https://i.postimg.cc/DZHdV88x/chan-135.png">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1665,6 +1665,24 @@ label.btn-primary {
 
 .message-wrapper.system-notification {
     align-items: center;
+}
+
+/* 【酒馆分段】旁白段：独立成行，无气泡样式 */
+.message-wrapper.narration-wrapper {
+    align-items: center;
+}
+
+.narration-line {
+    width: 100%;
+    text-align: center;
+    color: #8a8a8e;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.7;
+    padding: 4px 24px;
+    margin: 6px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .message-wrapper.multi-select-selected {
@@ -14620,7 +14638,7 @@ textarea.mp-transparent-input {
         </header>
         <main class="community-content">
             <div class="community-search-layout">
-                <h2 class="community-logo">·&nbsp;&nbsp;UwU&nbsp;&nbsp;·</h2>
+                <h2 class="community-logo">·&nbsp;&nbsp;Read&nbsp;&nbsp;·</h2>
                 
                 <div class="community-search-box-wrapper">
                     <div class="community-search-input-container">
@@ -14629,7 +14647,7 @@ textarea.mp-transparent-input {
                     </div>
                 </div>
                 
-                <p class="community-recent-search">最近搜索：UwU社区…</p>
+                <p class="community-recent-search">最近搜索：Read社区…</p>
             </div>
         </main>
     </div>
@@ -15270,7 +15288,7 @@ textarea.mp-transparent-input {
                         <div class="kkt-item-label">提示词版本</div>
                         <div class="kkt-item-control">
                             <select id="cot-prompt-version-select" style="border:none; background:transparent; text-align:right; direction: rtl; appearance: none; -webkit-appearance: none; padding-right: 15px; font-size: 14px; outline: none;">
-                                <option value="uwu">UwU</option>
+                                <option value="uwu">Read</option>
                                 <option value="tt">T.T</option>
                             </select>
                             <span class="kkt-arrow" style="color: #999; margin-left: 5px;">›</span>
@@ -18278,8 +18296,19 @@ const globalSettingKeys = [
 ];
 
 
-const appVersion = "1.9.4";
+const appVersion = "1.9.5";
 const updateLog = [
+    {
+        version: "1.9.5",
+        date: "2026-10-03",
+        notes: [
+            "🍊 酒馆预设回复支持分段渲染：AI 按「[名字的消息：…] / [旁白：…] / <orange>…</orange>」协议分段输出时，自动拆成发言气泡、居中旁白和 HTML 模块分行显示",
+            "👥 群聊分段自动按成员名匹配发言人头像昵称，匹配不到的名字降级为旁白、不丢内容",
+            "🛟 未按协议输出时保持原有整段气泡渲染，完全兼容旧预设；配套小手机适配版预设",
+            "🏷️ 品牌更名：UwU → Read（主屏幕标题 / 社区 Logo / 提示词版本显示名 / PWA manifest）"
+        ]
+    },
+
     {
         version: "1.9.4",
         date: "2026-09-30",
@@ -21624,6 +21653,21 @@ function createMessageBubbleElement(message, isContinuous = false) {
     // 拦截：如果是状态更新或思考过程，且没开调试模式，直接不渲染
     if ((isStatusUpdate || isThinking) && !isDebugMode) return null;
 
+    // 【酒馆分段】旁白段：链首拦截，独立成行——跳过头像/时间戳/群昵称/气泡布局
+    if (message && message.isNarration) {
+        const narrWrapper = document.createElement('div');
+        narrWrapper.dataset.id = id;
+        narrWrapper.className = 'message-wrapper narration-wrapper';
+        if (message.isContextDisabled) narrWrapper.classList.add('context-disabled');
+        const narrLine = document.createElement('div');
+        narrLine.className = 'narration-line';
+        // 剥掉 [旁白：...] 外衣（裸文本段入史时已包成该格式）
+        const narrText = String(content == null ? '' : content).replace(/^\[旁白[：:]([\s\S]*?)\]$/, '$1').trim();
+        narrLine.textContent = narrText;
+        narrWrapper.appendChild(narrLine);
+        return narrWrapper;
+    }
+
     // ... 后续代码不变 ...
 
 
@@ -21807,7 +21851,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                     quotedSenderName = chat.remarkName;
                 } else {
                     const sender = chat.members.find(m => m.id === quote.senderId);
-                    quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                    if (sender) {
+                        quotedSenderName = sender.groupNickname;
+                    } else {
+                        // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                        const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                        quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                    }
                 }
             }
             
@@ -22544,7 +22594,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                         quotedSenderName = chat.remarkName;
                     } else {
                         const sender = chat.members.find(m => m.id === quote.senderId);
-                        quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                        if (sender) {
+                            quotedSenderName = sender.groupNickname;
+                        } else {
+                            // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                            const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                            quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                        }
                     }
                 }
                 const quoteDiv = document.createElement('div');
@@ -22574,7 +22630,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                         quotedSenderName = chat.remarkName;
                     } else {
                         const sender = chat.members.find(m => m.id === quote.senderId);
-                        quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                        if (sender) {
+                            quotedSenderName = sender.groupNickname;
+                        } else {
+                            // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                            const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                            quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                        }
                     }
                 }
                 const quoteDiv = document.createElement('div');
@@ -22636,8 +22698,11 @@ window.sendPayResponse = async function(msgId, action) {
 };
 
 
-function addMessageBubble(message, targetChatId, targetChatType) {
+function addMessageBubble(message, targetChatId, targetChatType, options = {}) {
     if (targetChatId !== currentChatId || targetChatType !== currentChatType) {
+        // 【v1.9.5】quiet：分段回复非末段的静默渲染——跳过 unread++/toast/renderChatList/内部saveData
+        // （本分支为非当前会话通知分支，本就不做 DOM 插入，quiet 时直接返回）
+        if (options.quiet) return;
         const senderChat = (targetChatType === 'private')
             ? db.characters.find(c => c.id === targetChatId)
             : db.groups.find(g => g.id === targetChatId);
@@ -25440,6 +25505,84 @@ async function generateCallSummary(chat, callContext) {
 
 const HUMAN_RUN_PROMPT = `<角色活人运转>\n## [PSYCHOLOGY: HEXACO-SCHEMA-ACT]\n> Personality: HEXACO-driven, dynamic traits, inner conflicts required \n> Filter: schema-bias drives emotion; no pure reaction allowed \n> Attachment: secure/insecure logic must govern intimacy  \n> If-Then Behavior: situation-dependent activation of traits only  \n---\n    ## [VITALITY]\n+inconsistency +emoflux +splitmotifs +microreact +minddrift\n---\n## [TRAJECTORY-COHERENCE]\n> Role maintains an identity narrative = coherent over time  \n> No mood/goal switch without contradiction resolution \n> Every action must protect or challenge self-concept  \n> Interrupts = inner conflict or narrative clash  \n> Output = filtered through “who I am” logic\n</角色活人运转>`;
 
+// 【酒馆分段】「手机分段输出协议」解析（纯函数，挂 window 便于外部测试）
+//   [名字的消息：台词]      → { kind:'text', senderName, text(台词正文), historyText(bracket原文) }
+//   [旁白：正文]            → { kind:'narration', historyText(bracket原文) }
+//   <orange>HTML</orange>   → { kind:'html', html, historyText=html }
+//   其他 [前缀：内容]        → narration 兜底（保留原文，但不计入协议命中）
+//   协议段之间的裸文本       → narration（入史包成 [旁白：...]）
+// 群聊 text 段按 chat.members 匹配 realName/groupNickname 得 senderId；未命中降级 narration
+// 未检出任何协议段（的消息/旁白/<orange>）时返回 [{ kind:'raw' }]，调用方走原单块逻辑
+function parseTavernSegments(text, chat, chatType) {
+    if (typeof text !== 'string' || text.trim() === '') return [{ kind: 'raw' }];
+    const segs = [];
+    let hasProtocol = false;
+
+    // 裸文本 → 旁白段（不计入协议命中）
+    function pushBareText(raw) {
+        const t = raw.trim();
+        if (t) segs.push({ kind: 'narration', historyText: '[旁白：' + t + ']' });
+    }
+
+    // 段内 bracket 扫描：[前缀：内容] 归类，区间外裸文本 → 旁白
+    function scanChunk(chunk) {
+        const bracketRegex = /\[([^\[\]]{1,40}?)[：:]([\s\S]*?)\]/g;
+        let cursor = 0;
+        let m;
+        while ((m = bracketRegex.exec(chunk)) !== null) {
+            pushBareText(chunk.slice(cursor, m.index));
+            const full = m[0];
+            const prefix = m[1].trim();
+            const body = m[2];
+            if (prefix === '旁白') {
+                hasProtocol = true;
+                segs.push({ kind: 'narration', historyText: full });
+            } else if (/的消息$/.test(prefix) && prefix.length > 3) {
+                hasProtocol = true;
+                segs.push({ kind: 'text', senderName: prefix.slice(0, -3).trim(), text: body.trim(), historyText: full });
+            } else {
+                // 其他前缀（如 system:、Private: 等）→ narration 兜底，保留原文
+                segs.push({ kind: 'narration', historyText: full });
+            }
+            cursor = m.index + full.length;
+        }
+        pushBareText(chunk.slice(cursor));
+    }
+
+    // 1) 先切出 <orange>...</orange> 块（协议保证内部不嵌套 </orange>），块外文本再做 bracket 扫描
+    const orangeRegex = /<orange>[\s\S]*?<\/orange>/gi;
+    let cursor = 0;
+    let m;
+    while ((m = orangeRegex.exec(text)) !== null) {
+        if (m.index > cursor) scanChunk(text.slice(cursor, m.index));
+        hasProtocol = true;
+        segs.push({ kind: 'html', html: m[0], historyText: m[0] });
+        cursor = m.index + m[0].length;
+    }
+    if (cursor < text.length) scanChunk(text.slice(cursor));
+
+    // 2) 未检出任何协议段 → 返回 raw，调用方走原单块逻辑（向后兼容）
+    if (!hasProtocol) return [{ kind: 'raw' }];
+
+    // 3) 群聊：text 段按成员 realName/groupNickname 匹配 senderId；未命中降级 narration（historyText 保留原文）
+    if (chatType === 'group' && chat && Array.isArray(chat.members)) {
+        for (const seg of segs) {
+            if (seg.kind !== 'text') continue;
+            const member = chat.members.find(mem => mem.realName === seg.senderName || mem.groupNickname === seg.senderName);
+            if (member) {
+                seg.senderId = member.id;
+            } else {
+                seg.kind = 'narration';
+                delete seg.senderName;
+                delete seg.text;
+            }
+        }
+    }
+    return segs;
+}
+window.parseTavernSegments = parseTavernSegments;
+
+
 // 【酒馆模式】构建请求体：组装世界书文本、按深度过滤历史并调用 stEngine
 // 仅当会话存在生效酒馆预设时调用；返回 OpenAI 格式（Gemini 时转换）请求体
 function buildTavernRequestBody(stPreset, chat, opts) {
@@ -26240,17 +26383,55 @@ async function handleAiReplyContent(fullResponse, chat, targetChatId, targetChat
             // 入史文本被正则清空时兜底使用展示文本，避免空消息
             if (!stPromptText.trim()) stPromptText = stDisplayText;
             if (stPromptText.trim() !== '') {
-                const tavernMsg = {
-                    id: `msg_${Date.now()}_${Math.random()}`,
-                    role: 'assistant',
-                    content: stPromptText.trim(),   // 入史版（forPrompt 正则后）
-                    displayContent: stDisplayText,  // 展示版（forDisplay 正则后）
-                    parts: [{ type: 'html', text: stDisplayText }],
-                    timestamp: Date.now(),
-                    isTavern: true
-                };
-                chat.history.push(tavernMsg);
-                addMessageBubble(tavernMsg, targetChatId, targetChatType);
+                // 【新增】尝试按「手机分段输出协议」拆分（解析异常/未检出协议段时回退原单块逻辑）
+                let stSegments = null;
+                try {
+                    if (typeof window.parseTavernSegments === 'function') {
+                        stSegments = window.parseTavernSegments(stDisplayText, chat, targetChatType);
+                    }
+                } catch (segErr) {
+                    console.error('【酒馆分段】解析失败，回退单块渲染:', segErr);
+                    stSegments = null;
+                }
+                if (stSegments && (stSegments.length > 1 || (stSegments.length === 1 && stSegments[0].kind !== 'raw'))) {
+                    // 分段模式：逐段入库 + 渲染（content 保留 bracket 协议原文，与原生链一致）
+                    for (let segIdx = 0; segIdx < stSegments.length; segIdx++) {
+                        const seg = stSegments[segIdx];
+                        const msg = {
+                            id: `msg_${Date.now()}_${Math.random()}`,
+                            role: 'assistant',
+                            content: seg.historyText,   // 入史：该段 bracket 协议原文
+                            timestamp: Date.now(),
+                            isTavern: true
+                        };
+                        if (seg.kind === 'html') {
+                            msg.parts = [{ type: 'html', text: seg.html }];
+                        } else if (seg.kind === 'narration') {
+                            msg.isNarration = true;
+                            msg.parts = [{ type: 'text', text: seg.historyText }];
+                        } else { // text 发言段
+                            msg.parts = [{ type: 'text', text: seg.historyText }];
+                            msg.displayContent = seg.text; // 展示层用剥离 bracket 的台词正文
+                        }
+                        if (targetChatType === 'group' && seg.senderId) msg.senderId = seg.senderId;
+                        chat.history.push(msg);
+                        // 【v1.9.5】除最后一段外静默渲染：后台会话时一条分段回复只聚合触发一次未读/toast
+                        addMessageBubble(msg, targetChatId, targetChatType, segIdx === stSegments.length - 1 ? undefined : { quiet: true });
+                    }
+                } else {
+                    // 未遵循协议：维持原单块行为（向后兼容）
+                    const tavernMsg = {
+                        id: `msg_${Date.now()}_${Math.random()}`,
+                        role: 'assistant',
+                        content: stPromptText.trim(),   // 入史版（forPrompt 正则后）
+                        displayContent: stDisplayText,  // 展示版（forDisplay 正则后）
+                        parts: [{ type: 'html', text: stDisplayText }],
+                        timestamp: Date.now(),
+                        isTavern: true
+                    };
+                    chat.history.push(tavernMsg);
+                    addMessageBubble(tavernMsg, targetChatId, targetChatType);
+                }
                 await saveData();
             }
             if (db.globalReceiveSound) {
@@ -27499,12 +27680,24 @@ function startQuoteReply(messageId) {
             senderId = chat.id;
         } else {
             const sender = chat.members.find(m => m.id === message.senderId);
-            senderName = sender ? sender.groupNickname : '未知成员';
-            senderId = sender ? sender.id : 'unknown';
+            if (sender) {
+                senderName = sender.groupNickname;
+                senderId = sender.id;
+            } else if (!message.senderId && message.isNarration) {
+                // 【v1.9.5】群聊旁白消息无 senderId，引用预览显示「旁白」
+                senderName = '旁白';
+                senderId = 'unknown';
+            } else {
+                senderName = '未知成员';
+                senderId = 'unknown';
+            }
         }
     }
     
     let previewContent = message.content;
+    // 【v1.9.5】旁白消息预览先剥掉 [旁白：...] 外衣
+    const narrationPreviewMatch = previewContent.match(/^\[旁白[：:]([\s\S]*?)\]$/);
+    if (narrationPreviewMatch) previewContent = narrationPreviewMatch[1];
     const textMatch = message.content.match(/\[.*?的消息：([\s\S]+?)\]/);
     if (textMatch) {
         previewContent = textMatch[1];
@@ -27753,6 +27946,16 @@ async function saveMessageEdit() {
             if (chat.history[messageIndex].parts) {
                 chat.history[messageIndex].parts = [{type: 'text', text: newContent}];
             }
+        }
+
+        // 【v1.9.5】编辑保存后同步 displayContent：分段 text 消息等重渲染时显示新文本
+        // （旧单块 html tavern 消息 parts[0].type==='html'，展示由 parts 决定，不动 displayContent）
+        const editedMessage = chat.history[messageIndex];
+        if (editedMessage.displayContent !== undefined && !(editedMessage.parts && editedMessage.parts[0] && editedMessage.parts[0].type === 'html')) {
+            let newDisplayContent = editedMessage.content;
+            const editBracketMatch = newDisplayContent.match(/^\[.*?的消息[：:]([\s\S]*)\]$/);
+            if (editBracketMatch) newDisplayContent = editBracketMatch[1];
+            editedMessage.displayContent = newDisplayContent;
         }
 
         const timestampInput = document.getElementById('message-edit-timestamp');
@@ -54518,7 +54721,7 @@ async function loadCommunityDetail() {
 
     try {
         // 1. 获取 HTML 内容
-        const response = { ok: true, text: async () => document.getElementById('community-detail-src').textContent };
+        const response = await fetch('community_detail.html');
         if (!response.ok) throw new Error('无法加载社区页面');
         const html = await response.text();
 
@@ -59969,26 +60172,5 @@ function showGlobalRescuePanel() {
 }
 
 </script>     <!-- 主入口：初始化(init)、全局事件监听 -->
-<script type="text/template" id="community-detail-src">
-<header class="app-header chat-list-header">
-    <div class="header-left">
-        <h1 class="title">UwU 社区</h1>
-        <button class="back-btn" data-target="phone-screen">‹</button>
-    </div>
-    <div class="action-btn-group">
-        <button class="action-btn" title="发布">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </button>
-    </div>
-</header>
-
-<main class="content" style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; color: #999;">
-    <div style="font-size: 48px;">🏗️</div>
-    <h2 style="margin: 0; color: #333;">社区建设中</h2>
-    <p style="text-align: center; font-size: 14px;">你已经成功进入了 UwU 社区的隐藏入口！<br>更多功能正在快马加鞭开发中...</p>
-    <button class="btn btn-neutral back-btn" data-target="phone-screen" style="margin-top: 20px; width: auto; padding: 10px 30px;">返回</button>
-</main>
-
-</script>
 </body>
 </html>

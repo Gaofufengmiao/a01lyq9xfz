@@ -6,7 +6,7 @@
     <title>章鱼喷墨机</title>
     <meta name="theme-color" content="#ffffff"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="UwU" />
+    <meta name="apple-mobile-web-app-title" content="Read" />
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" href="https://i.postimg.cc/DZHdV88x/chan-135.png">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1665,6 +1665,24 @@ label.btn-primary {
 
 .message-wrapper.system-notification {
     align-items: center;
+}
+
+/* 【酒馆分段】旁白段：独立成行，无气泡样式 */
+.message-wrapper.narration-wrapper {
+    align-items: center;
+}
+
+.narration-line {
+    width: 100%;
+    text-align: center;
+    color: #8a8a8e;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.7;
+    padding: 4px 24px;
+    margin: 6px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .message-wrapper.multi-select-selected {
@@ -12586,6 +12604,600 @@ input:checked + .kkt-slider:before {
     transition: none;
 }
 
+/* ===== 共读增强 v1.9.4 ===== */
+
+/* 弹幕层：容器不拦截事件（不挡正文长按/翻页），仅弹幕 pill 自身可点 */
+#reader-danmaku-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 90; /* 高于正文、低于 header/footer(100) */
+}
+
+.reader-danmaku-pill {
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 80%;
+    padding: 4px 12px 4px 4px;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    font-size: 13px;
+    color: #333;
+    pointer-events: auto;
+    cursor: pointer;
+    white-space: nowrap;
+    animation-name: reader-danmaku-fly;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.reader-danmaku-pill .danmaku-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+@keyframes reader-danmaku-fly {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
+}
+
+/* 共读面板（底部弹出，风格仿 reader-settings-overlay） */
+.reader-companion-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 210;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.reader-companion-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.reader-companion-panel {
+    width: 100%;
+    max-height: 78%;
+    background: var(--reader-panel-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.3s, background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.reader-companion-overlay.active .reader-companion-panel {
+    transform: translateY(0);
+}
+
+.reader-companion-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--reader-text-color);
+}
+
+.reader-companion-content {
+    padding: 5px 20px 20px;
+    overflow-y: auto;
+}
+
+.companion-section-title {
+    font-size: 13px;
+    color: var(--reader-text-color);
+    opacity: 0.7;
+    margin: 12px 0 8px;
+}
+
+.companion-char-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.companion-char-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 56px;
+}
+
+.companion-char-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.companion-char-item.active .companion-char-avatar {
+    border-color: var(--primary-color);
+}
+
+.companion-char-name {
+    font-size: 11px;
+    color: var(--reader-text-color);
+    max-width: 56px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.companion-char-item.active .companion-char-name {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.companion-empty-hint {
+    font-size: 13px;
+    color: var(--reader-text-color);
+    opacity: 0.6;
+    padding: 8px 0;
+}
+
+.companion-collapse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--reader-text-color);
+    cursor: pointer;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+}
+
+.companion-collapse-arrow {
+    opacity: 0.5;
+}
+
+.companion-wb-list {
+    max-height: 140px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.companion-wb-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--reader-text-color);
+    cursor: pointer;
+}
+
+.companion-range-row {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--reader-text-color);
+}
+
+.companion-range-row label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.companion-custom-pages {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--reader-text-color);
+    align-items: center;
+    gap: 4px;
+}
+
+.companion-custom-pages input {
+    width: 56px;
+    padding: 4px 6px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--reader-text-color);
+}
+
+.companion-btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.companion-action-btn {
+    flex: 1;
+    padding: 9px 0;
+    border: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--reader-text-color);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.companion-action-btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.companion-sync-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--reader-text-color);
+    cursor: pointer;
+}
+
+.companion-history-list {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.companion-history-item {
+    display: flex;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.companion-history-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.companion-history-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.companion-history-top {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    font-size: 12px;
+}
+
+.companion-history-name {
+    color: var(--reader-text-color);
+    font-weight: bold;
+}
+
+.companion-history-range {
+    color: var(--primary-color);
+}
+
+.companion-history-time {
+    margin-left: auto;
+    color: var(--reader-text-color);
+    opacity: 0.5;
+}
+
+.companion-history-text {
+    font-size: 13px;
+    color: var(--reader-text-color);
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 弹幕讨论弹窗（纯对话，气泡仿 coread-bubble 风格） */
+.coread-discuss-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.coread-discuss-overlay.visible {
+    display: flex;
+}
+
+.coread-discuss-window {
+    width: 92%;
+    max-width: 380px;
+    max-height: 80%;
+    background: var(--reader-panel-bg, rgba(255, 255, 255, 0.95));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.coread-discuss-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--reader-text-color, #333);
+}
+
+.coread-discuss-name {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.coread-discuss-title {
+    font-size: 12px;
+    opacity: 0.6;
+    flex: 1;
+}
+
+.coread-discuss-quote {
+    padding: 10px 15px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--reader-text-color, #333);
+    opacity: 0.75;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.coread-discuss-thread {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 15px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.discuss-empty {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    padding: 20px 0;
+}
+
+.coread-discuss-input-area {
+    display: flex;
+    gap: 10px;
+    padding: 10px 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#discuss-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--reader-text-color, #333);
+    outline: none;
+}
+
+#discuss-send-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 0 15px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* 书架页签（书架 / 笔记库） */
+.bookshelf-tabs {
+    display: flex;
+    gap: 10px;
+    padding: 10px 15px 0;
+}
+
+.bookshelf-tab {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.06);
+    color: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.bookshelf-tab.active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.bookshelf-notes-list {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notes-empty {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    padding: 40px 0;
+}
+
+/* 笔记卡片 */
+.reader-note-card {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.reader-note-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.reader-note-badge {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    color: #fff;
+    background: #888;
+    flex-shrink: 0;
+}
+
+.reader-note-badge.coread {
+    background: var(--primary-color);
+}
+
+.reader-note-badge.char {
+    background: #e083a6;
+}
+
+.reader-note-book {
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reader-note-time {
+    margin-left: auto;
+    color: #999;
+    flex-shrink: 0;
+}
+
+.reader-note-card-char {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.reader-note-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.reader-note-preview {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 笔记详情 modal */
+.reader-note-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.reader-note-modal-overlay.visible {
+    display: flex;
+}
+
+.reader-note-modal-window {
+    width: 92%;
+    max-width: 380px;
+    max-height: 80%;
+    background: #fff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.reader-note-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.reader-note-modal-meta {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #888;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.reader-note-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.reader-note-delete-btn {
+    margin: 10px 16px 14px;
+    padding: 9px 0;
+    border: none;
+    border-radius: 10px;
+    background: #ff5b5b;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 </style>
     <style>
 /* ==== css/modules/st_preset.css ==== */
@@ -14026,7 +14638,7 @@ textarea.mp-transparent-input {
         </header>
         <main class="community-content">
             <div class="community-search-layout">
-                <h2 class="community-logo">·&nbsp;&nbsp;UwU&nbsp;&nbsp;·</h2>
+                <h2 class="community-logo">·&nbsp;&nbsp;Read&nbsp;&nbsp;·</h2>
                 
                 <div class="community-search-box-wrapper">
                     <div class="community-search-input-container">
@@ -14035,7 +14647,7 @@ textarea.mp-transparent-input {
                     </div>
                 </div>
                 
-                <p class="community-recent-search">最近搜索：UwU社区…</p>
+                <p class="community-recent-search">最近搜索：Read社区…</p>
             </div>
         </main>
     </div>
@@ -14676,7 +15288,7 @@ textarea.mp-transparent-input {
                         <div class="kkt-item-label">提示词版本</div>
                         <div class="kkt-item-control">
                             <select id="cot-prompt-version-select" style="border:none; background:transparent; text-align:right; direction: rtl; appearance: none; -webkit-appearance: none; padding-right: 15px; font-size: 14px; outline: none;">
-                                <option value="uwu">UwU</option>
+                                <option value="uwu">Read</option>
                                 <option value="tt">T.T</option>
                             </select>
                             <span class="kkt-arrow" style="color: #999; margin-left: 5px;">›</span>
@@ -17684,8 +18296,31 @@ const globalSettingKeys = [
 ];
 
 
-const appVersion = "1.9.3";
+const appVersion = "1.9.5";
 const updateLog = [
+    {
+        version: "1.9.5",
+        date: "2026-10-03",
+        notes: [
+            "🍊 酒馆预设回复支持分段渲染：AI 按「[名字的消息：…] / [旁白：…] / <orange>…</orange>」协议分段输出时，自动拆成发言气泡、居中旁白和 HTML 模块分行显示",
+            "👥 群聊分段自动按成员名匹配发言人头像昵称，匹配不到的名字降级为旁白、不丢内容",
+            "🛟 未按协议输出时保持原有整段气泡渲染，完全兼容旧预设；配套小手机适配版预设",
+            "🏷️ 品牌更名：UwU → Read（主屏幕标题 / 社区 Logo / 提示词版本显示名 / PWA manifest）"
+        ]
+    },
+
+    {
+        version: "1.9.4",
+        date: "2026-09-30",
+        notes: [
+            "📡 共读进度实时同步：聊天时 TA 能知道你正在读哪本书、哪一章、读到第几页（可在共读面板关闭）",
+            "🎯 弹幕吐槽：阅读页底部「共读」→ 选角色 → 来一条吐槽，支持本章/当页/自选页范围，弹幕飞过屏幕",
+            "💬 点弹幕即可和 TA 纯对话讨论这条吐槽，历史弹幕随时回看",
+            "📝 本章读书笔记：一键生成「共读笔记」或「TA的读书笔记」，存入书架页「笔记库」，可查看与删除",
+            "📚 共读世界书勾选：为所选角色勾选世界书，背景设定自动注入共读类 AI 调用"
+        ]
+    },
+
     {
         version: "1.9.3",
         date: "2026-09-30",
@@ -18065,6 +18700,22 @@ function initDatabase() {
         reader_books: '&id, lastReadTime',
         reader_chapters: '&id, bookId',
         reader_comments: '++id, bookId, [bookId+chapterIndex+paragraphIndex]'
+    });
+    dexieDB.version(9).stores({
+        characters: '&id',
+        groups: '&id',
+        worldBooks: '&id',
+        myStickers: '&id',
+        globalSettings: 'key',
+        workshopHistory: '++id, timestamp',
+        workshopVibeGroups: '++id',
+        characterPhotos: '++id, charId, timestamp',
+        customFonts: '&id',
+        reader_books: '&id, lastReadTime',
+        reader_chapters: '&id, bookId',
+        reader_comments: '++id, bookId, [bookId+chapterIndex+paragraphIndex]',
+        reader_danmaku: '++id, bookId, timestamp',
+        reader_notes: '++id, bookId, timestamp'
     });
     dexieDB.version(7).stores({
         characters: '&id',
@@ -21002,6 +21653,21 @@ function createMessageBubbleElement(message, isContinuous = false) {
     // 拦截：如果是状态更新或思考过程，且没开调试模式，直接不渲染
     if ((isStatusUpdate || isThinking) && !isDebugMode) return null;
 
+    // 【酒馆分段】旁白段：链首拦截，独立成行——跳过头像/时间戳/群昵称/气泡布局
+    if (message && message.isNarration) {
+        const narrWrapper = document.createElement('div');
+        narrWrapper.dataset.id = id;
+        narrWrapper.className = 'message-wrapper narration-wrapper';
+        if (message.isContextDisabled) narrWrapper.classList.add('context-disabled');
+        const narrLine = document.createElement('div');
+        narrLine.className = 'narration-line';
+        // 剥掉 [旁白：...] 外衣（裸文本段入史时已包成该格式）
+        const narrText = String(content == null ? '' : content).replace(/^\[旁白[：:]([\s\S]*?)\]$/, '$1').trim();
+        narrLine.textContent = narrText;
+        narrWrapper.appendChild(narrLine);
+        return narrWrapper;
+    }
+
     // ... 后续代码不变 ...
 
 
@@ -21185,7 +21851,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                     quotedSenderName = chat.remarkName;
                 } else {
                     const sender = chat.members.find(m => m.id === quote.senderId);
-                    quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                    if (sender) {
+                        quotedSenderName = sender.groupNickname;
+                    } else {
+                        // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                        const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                        quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                    }
                 }
             }
             
@@ -21922,7 +22594,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                         quotedSenderName = chat.remarkName;
                     } else {
                         const sender = chat.members.find(m => m.id === quote.senderId);
-                        quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                        if (sender) {
+                            quotedSenderName = sender.groupNickname;
+                        } else {
+                            // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                            const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                            quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                        }
                     }
                 }
                 const quoteDiv = document.createElement('div');
@@ -21952,7 +22630,13 @@ const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
                         quotedSenderName = chat.remarkName;
                     } else {
                         const sender = chat.members.find(m => m.id === quote.senderId);
-                        quotedSenderName = sender ? sender.groupNickname : '未知成员';
+                        if (sender) {
+                            quotedSenderName = sender.groupNickname;
+                        } else {
+                            // 【v1.9.5】群聊旁白消息无 senderId：引用预览兜底显示「旁白」
+                            const quotedOrigMsg = (quote.messageId && chat.history) ? chat.history.find(m => m.id === quote.messageId) : null;
+                            quotedSenderName = (quotedOrigMsg && quotedOrigMsg.isNarration) ? '旁白' : '未知成员';
+                        }
                     }
                 }
                 const quoteDiv = document.createElement('div');
@@ -22014,8 +22698,11 @@ window.sendPayResponse = async function(msgId, action) {
 };
 
 
-function addMessageBubble(message, targetChatId, targetChatType) {
+function addMessageBubble(message, targetChatId, targetChatType, options = {}) {
     if (targetChatId !== currentChatId || targetChatType !== currentChatType) {
+        // 【v1.9.5】quiet：分段回复非末段的静默渲染——跳过 unread++/toast/renderChatList/内部saveData
+        // （本分支为非当前会话通知分支，本就不做 DOM 插入，quiet 时直接返回）
+        if (options.quiet) return;
         const senderChat = (targetChatType === 'private')
             ? db.characters.find(c => c.id === targetChatId)
             : db.groups.find(g => g.id === targetChatId);
@@ -24818,6 +25505,84 @@ async function generateCallSummary(chat, callContext) {
 
 const HUMAN_RUN_PROMPT = `<角色活人运转>\n## [PSYCHOLOGY: HEXACO-SCHEMA-ACT]\n> Personality: HEXACO-driven, dynamic traits, inner conflicts required \n> Filter: schema-bias drives emotion; no pure reaction allowed \n> Attachment: secure/insecure logic must govern intimacy  \n> If-Then Behavior: situation-dependent activation of traits only  \n---\n    ## [VITALITY]\n+inconsistency +emoflux +splitmotifs +microreact +minddrift\n---\n## [TRAJECTORY-COHERENCE]\n> Role maintains an identity narrative = coherent over time  \n> No mood/goal switch without contradiction resolution \n> Every action must protect or challenge self-concept  \n> Interrupts = inner conflict or narrative clash  \n> Output = filtered through “who I am” logic\n</角色活人运转>`;
 
+// 【酒馆分段】「手机分段输出协议」解析（纯函数，挂 window 便于外部测试）
+//   [名字的消息：台词]      → { kind:'text', senderName, text(台词正文), historyText(bracket原文) }
+//   [旁白：正文]            → { kind:'narration', historyText(bracket原文) }
+//   <orange>HTML</orange>   → { kind:'html', html, historyText=html }
+//   其他 [前缀：内容]        → narration 兜底（保留原文，但不计入协议命中）
+//   协议段之间的裸文本       → narration（入史包成 [旁白：...]）
+// 群聊 text 段按 chat.members 匹配 realName/groupNickname 得 senderId；未命中降级 narration
+// 未检出任何协议段（的消息/旁白/<orange>）时返回 [{ kind:'raw' }]，调用方走原单块逻辑
+function parseTavernSegments(text, chat, chatType) {
+    if (typeof text !== 'string' || text.trim() === '') return [{ kind: 'raw' }];
+    const segs = [];
+    let hasProtocol = false;
+
+    // 裸文本 → 旁白段（不计入协议命中）
+    function pushBareText(raw) {
+        const t = raw.trim();
+        if (t) segs.push({ kind: 'narration', historyText: '[旁白：' + t + ']' });
+    }
+
+    // 段内 bracket 扫描：[前缀：内容] 归类，区间外裸文本 → 旁白
+    function scanChunk(chunk) {
+        const bracketRegex = /\[([^\[\]]{1,40}?)[：:]([\s\S]*?)\]/g;
+        let cursor = 0;
+        let m;
+        while ((m = bracketRegex.exec(chunk)) !== null) {
+            pushBareText(chunk.slice(cursor, m.index));
+            const full = m[0];
+            const prefix = m[1].trim();
+            const body = m[2];
+            if (prefix === '旁白') {
+                hasProtocol = true;
+                segs.push({ kind: 'narration', historyText: full });
+            } else if (/的消息$/.test(prefix) && prefix.length > 3) {
+                hasProtocol = true;
+                segs.push({ kind: 'text', senderName: prefix.slice(0, -3).trim(), text: body.trim(), historyText: full });
+            } else {
+                // 其他前缀（如 system:、Private: 等）→ narration 兜底，保留原文
+                segs.push({ kind: 'narration', historyText: full });
+            }
+            cursor = m.index + full.length;
+        }
+        pushBareText(chunk.slice(cursor));
+    }
+
+    // 1) 先切出 <orange>...</orange> 块（协议保证内部不嵌套 </orange>），块外文本再做 bracket 扫描
+    const orangeRegex = /<orange>[\s\S]*?<\/orange>/gi;
+    let cursor = 0;
+    let m;
+    while ((m = orangeRegex.exec(text)) !== null) {
+        if (m.index > cursor) scanChunk(text.slice(cursor, m.index));
+        hasProtocol = true;
+        segs.push({ kind: 'html', html: m[0], historyText: m[0] });
+        cursor = m.index + m[0].length;
+    }
+    if (cursor < text.length) scanChunk(text.slice(cursor));
+
+    // 2) 未检出任何协议段 → 返回 raw，调用方走原单块逻辑（向后兼容）
+    if (!hasProtocol) return [{ kind: 'raw' }];
+
+    // 3) 群聊：text 段按成员 realName/groupNickname 匹配 senderId；未命中降级 narration（historyText 保留原文）
+    if (chatType === 'group' && chat && Array.isArray(chat.members)) {
+        for (const seg of segs) {
+            if (seg.kind !== 'text') continue;
+            const member = chat.members.find(mem => mem.realName === seg.senderName || mem.groupNickname === seg.senderName);
+            if (member) {
+                seg.senderId = member.id;
+            } else {
+                seg.kind = 'narration';
+                delete seg.senderName;
+                delete seg.text;
+            }
+        }
+    }
+    return segs;
+}
+window.parseTavernSegments = parseTavernSegments;
+
+
 // 【酒馆模式】构建请求体：组装世界书文本、按深度过滤历史并调用 stEngine
 // 仅当会话存在生效酒馆预设时调用；返回 OpenAI 格式（Gemini 时转换）请求体
 function buildTavernRequestBody(stPreset, chat, opts) {
@@ -25019,6 +25784,14 @@ async function getAiReply(chatId, chatType, isBackground = false) {
             } else {
                 systemPrompt = "Group chat system prompt not available.";
             }
+        }
+
+        // 【共读进度同步】阅读器有进行中的书籍且用户开启同步时，把实时阅读进度注入提示词
+        if (window.readerCompanion && typeof window.readerCompanion.getChatContextBlock === 'function') {
+            try {
+                const coreadBlock = await window.readerCompanion.getChatContextBlock();
+                if (coreadBlock) systemPrompt += `\n${coreadBlock}\n`;
+            } catch (e) { console.error('共读进度注入失败:', e); }
         }
 
         let historySlice = chat.history.slice(-chat.maxMemory);
@@ -25610,17 +26383,55 @@ async function handleAiReplyContent(fullResponse, chat, targetChatId, targetChat
             // 入史文本被正则清空时兜底使用展示文本，避免空消息
             if (!stPromptText.trim()) stPromptText = stDisplayText;
             if (stPromptText.trim() !== '') {
-                const tavernMsg = {
-                    id: `msg_${Date.now()}_${Math.random()}`,
-                    role: 'assistant',
-                    content: stPromptText.trim(),   // 入史版（forPrompt 正则后）
-                    displayContent: stDisplayText,  // 展示版（forDisplay 正则后）
-                    parts: [{ type: 'html', text: stDisplayText }],
-                    timestamp: Date.now(),
-                    isTavern: true
-                };
-                chat.history.push(tavernMsg);
-                addMessageBubble(tavernMsg, targetChatId, targetChatType);
+                // 【新增】尝试按「手机分段输出协议」拆分（解析异常/未检出协议段时回退原单块逻辑）
+                let stSegments = null;
+                try {
+                    if (typeof window.parseTavernSegments === 'function') {
+                        stSegments = window.parseTavernSegments(stDisplayText, chat, targetChatType);
+                    }
+                } catch (segErr) {
+                    console.error('【酒馆分段】解析失败，回退单块渲染:', segErr);
+                    stSegments = null;
+                }
+                if (stSegments && (stSegments.length > 1 || (stSegments.length === 1 && stSegments[0].kind !== 'raw'))) {
+                    // 分段模式：逐段入库 + 渲染（content 保留 bracket 协议原文，与原生链一致）
+                    for (let segIdx = 0; segIdx < stSegments.length; segIdx++) {
+                        const seg = stSegments[segIdx];
+                        const msg = {
+                            id: `msg_${Date.now()}_${Math.random()}`,
+                            role: 'assistant',
+                            content: seg.historyText,   // 入史：该段 bracket 协议原文
+                            timestamp: Date.now(),
+                            isTavern: true
+                        };
+                        if (seg.kind === 'html') {
+                            msg.parts = [{ type: 'html', text: seg.html }];
+                        } else if (seg.kind === 'narration') {
+                            msg.isNarration = true;
+                            msg.parts = [{ type: 'text', text: seg.historyText }];
+                        } else { // text 发言段
+                            msg.parts = [{ type: 'text', text: seg.historyText }];
+                            msg.displayContent = seg.text; // 展示层用剥离 bracket 的台词正文
+                        }
+                        if (targetChatType === 'group' && seg.senderId) msg.senderId = seg.senderId;
+                        chat.history.push(msg);
+                        // 【v1.9.5】除最后一段外静默渲染：后台会话时一条分段回复只聚合触发一次未读/toast
+                        addMessageBubble(msg, targetChatId, targetChatType, segIdx === stSegments.length - 1 ? undefined : { quiet: true });
+                    }
+                } else {
+                    // 未遵循协议：维持原单块行为（向后兼容）
+                    const tavernMsg = {
+                        id: `msg_${Date.now()}_${Math.random()}`,
+                        role: 'assistant',
+                        content: stPromptText.trim(),   // 入史版（forPrompt 正则后）
+                        displayContent: stDisplayText,  // 展示版（forDisplay 正则后）
+                        parts: [{ type: 'html', text: stDisplayText }],
+                        timestamp: Date.now(),
+                        isTavern: true
+                    };
+                    chat.history.push(tavernMsg);
+                    addMessageBubble(tavernMsg, targetChatId, targetChatType);
+                }
                 await saveData();
             }
             if (db.globalReceiveSound) {
@@ -26869,12 +27680,24 @@ function startQuoteReply(messageId) {
             senderId = chat.id;
         } else {
             const sender = chat.members.find(m => m.id === message.senderId);
-            senderName = sender ? sender.groupNickname : '未知成员';
-            senderId = sender ? sender.id : 'unknown';
+            if (sender) {
+                senderName = sender.groupNickname;
+                senderId = sender.id;
+            } else if (!message.senderId && message.isNarration) {
+                // 【v1.9.5】群聊旁白消息无 senderId，引用预览显示「旁白」
+                senderName = '旁白';
+                senderId = 'unknown';
+            } else {
+                senderName = '未知成员';
+                senderId = 'unknown';
+            }
         }
     }
     
     let previewContent = message.content;
+    // 【v1.9.5】旁白消息预览先剥掉 [旁白：...] 外衣
+    const narrationPreviewMatch = previewContent.match(/^\[旁白[：:]([\s\S]*?)\]$/);
+    if (narrationPreviewMatch) previewContent = narrationPreviewMatch[1];
     const textMatch = message.content.match(/\[.*?的消息：([\s\S]+?)\]/);
     if (textMatch) {
         previewContent = textMatch[1];
@@ -27123,6 +27946,16 @@ async function saveMessageEdit() {
             if (chat.history[messageIndex].parts) {
                 chat.history[messageIndex].parts = [{type: 'text', text: newContent}];
             }
+        }
+
+        // 【v1.9.5】编辑保存后同步 displayContent：分段 text 消息等重渲染时显示新文本
+        // （旧单块 html tavern 消息 parts[0].type==='html'，展示由 parts 决定，不动 displayContent）
+        const editedMessage = chat.history[messageIndex];
+        if (editedMessage.displayContent !== undefined && !(editedMessage.parts && editedMessage.parts[0] && editedMessage.parts[0].type === 'html')) {
+            let newDisplayContent = editedMessage.content;
+            const editBracketMatch = newDisplayContent.match(/^\[.*?的消息[：:]([\s\S]*)\]$/);
+            if (editBracketMatch) newDisplayContent = editBracketMatch[1];
+            editedMessage.displayContent = newDisplayContent;
         }
 
         const timestampInput = document.getElementById('message-edit-timestamp');
@@ -43288,6 +44121,7 @@ function renderTutorialContent() {
         {title: '404-群聊', imageUrls: ['https://i.postimg.cc/X7LSmRTJ/404.jpg']},
         {title: '🏮 酒馆预设怎么用（SillyTavern）', contentHtml: `<div style="font-size:0.89rem; color:#666; line-height:1.8;"><p><b>入口：</b>「更多 → 酒馆预设」。</p><p><b>导入：</b>点右上角「导入预设」，选择 SillyTavern（酒馆）的预设 JSON 文件，提示词和正则会一起导入。</p><p><b>启用：</b>在预设列表里打开开关即可使用；「设为默认」对所有未单独绑定的角色生效；也可以进入详情页只绑定给某个角色。</p><p><b>详情页：</b>可查看提示词列表（单独启停、调整顺序）和正则列表；内置「正则测试器」，粘贴文本即可预览替换效果，即改即试。</p><p><b>聊天时：</b>预设会自动接管提示词组装与采样参数；AI 回复先经过正则处理再显示，以整段气泡排版；{{user}} / {{char}} 会自动替换成你的名字和角色名。</p><p><b>导出：</b>详情页支持导出回 JSON，可与酒馆互通。</p></div>`},
         {title: '📖 共读：和角色一起读书', contentHtml: `<div style="font-size:0.89rem; color:#666; line-height:1.8;"><p><b>导入：</b>书架点「+」即可导入 .txt / .epub / .pdf（EPUB 自动按目录分章；PDF 需为文字版）。</p><p><b>玩法：</b>打开任意一本书，长按想聊的段落，点「💬 和 TA 聊这段」，选择一个角色。</p><p><b>讨论：</b>角色会针对这段内容回复你；在评论串里可以继续追问、深入讨论。</p><p><b>保存：</b>这些讨论会保存在书籍的评论里（带角色标记），随时可以回看。</p></div>`},
+        {title: '🚀 共读增强：进度同步 · 弹幕吐槽 · 读书笔记', contentHtml: `<div style="font-size:0.89rem; color:#666; line-height:1.8;"><p><b>入口：</b>打开任意一本书，点底部「共读」按钮打开共读面板。</p><p><b>弹幕吐槽：</b>选好角色后点「🎯 来一条吐槽」，TA 的吐槽会像弹幕一样飞过屏幕；范围可选「本章 / 当页 / 自选页」。点击弹幕可暂停并打开讨论弹窗，和 TA 纯文字讨论这条吐槽；历史弹幕在面板底部可回看。</p><p><b>读书笔记：</b>一章读完后点「📝 共读笔记」或「📓 TA的笔记」，生成后自动存入书架页「笔记库」页签，可查看全文或删除。</p><p><b>进度同步：</b>勾选「聊天时告诉 TA 我的阅读进度」后，聊天时 TA 会知道你正在读哪本书、哪一章、第几页。（注意：使用酒馆预设时提示词由预设接管，进度同步不生效。）</p><p><b>世界书勾选：</b>展开「世界书设定」为当前角色勾选条目，背景设定会自动注入吐槽、讨论与笔记的 AI 调用。</p></div>`},
         {title: '🏠 线下模式（面对面聊天）', contentHtml: `<div style="font-size:0.89rem; color:#666; line-height:1.8;"><p><b>开启：</b>聊天设置 → 打开「线下模式」开关（每个角色单独设置；群聊设置里也有同款开关）。</p><p><b>效果：</b>开启后，气泡里的内容 = 角色当面说的话，气泡外的文字 = 动作、场景等旁白。</p><p><b>搭配：</b>适合与自带线下写法的酒馆预设一起使用，导入预设后直接把开关打开即可。</p></div>`},
         {title: '🔓 API 与导入说明', contentHtml: `<div style="font-size:0.89rem; color:#666; line-height:1.8;"><p><b>API：</b>不再限制任何站点，任意 OpenAI 兼容接口（官方 / 中转 / 本地部署）都可以填写使用。</p><p><b>导入：</b>酒馆角色卡、世界书、预设均不再需要解锁码，直接导入即可使用。</p><p><b>提醒：</b>所有数据都保存在浏览器本地，清除浏览器数据或换设备前，请先用下面的「备份数据」导出备份。</p></div>`}
     ];
@@ -53887,7 +54721,7 @@ async function loadCommunityDetail() {
 
     try {
         // 1. 获取 HTML 内容
-        const response = { ok: true, text: async () => document.getElementById('community-detail-src').textContent };
+        const response = await fetch('community_detail.html');
         if (!response.ok) throw new Error('无法加载社区页面');
         const html = await response.text();
 
@@ -54859,6 +55693,10 @@ const readerHtml = `
             </div>
         </header>
         <main class="content reader-bookshelf-content">
+            <div class="bookshelf-tabs">
+                <button class="bookshelf-tab active" id="bookshelf-tab-books">书架</button>
+                <button class="bookshelf-tab" id="bookshelf-tab-notes">笔记库</button>
+            </div>
             <div class="bookshelf-grid" id="bookshelf-grid">
                 <!-- JS 动态注入书籍 -->
                 <div class="book-item upload-book-btn" id="upload-book-btn">
@@ -54867,6 +55705,7 @@ const readerHtml = `
                     <div class="book-author">支持 .txt / .epub / .pdf</div>
                 </div>
             </div>
+            <div class="bookshelf-notes-list" id="bookshelf-notes-list" style="display: none;"></div>
             <input type="file" id="reader-file-upload" accept=".txt,.epub,.pdf" style="display: none;">
         </main>
     </div>
@@ -54896,6 +55735,10 @@ const readerHtml = `
             <button class="reader-footer-btn" id="reader-toc-btn">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                 目录
+            </button>
+            <button class="reader-footer-btn" id="reader-companion-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                共读
             </button>
             <div class="reader-progress-info" id="reader-progress-info">0.0%</div>
             <button class="reader-footer-btn" id="reader-settings-btn">
@@ -55134,12 +55977,176 @@ document.addEventListener('DOMContentLoaded', () => {
                 const chapterIds = chapters.map(ch => ch.id);
                 await dexieDB.reader_chapters.bulkDelete(chapterIds);
             });
+            // 共读增强：级联删除该书的弹幕与笔记记录
+            try {
+                if (dexieDB.reader_danmaku) await dexieDB.reader_danmaku.where('bookId').equals(bookId).delete();
+                if (dexieDB.reader_notes) await dexieDB.reader_notes.where('bookId').equals(bookId).delete();
+                if (dexieDB.reader_comments) await dexieDB.reader_comments.where('bookId').equals(bookId).delete();
+            } catch (e) {
+                console.error("级联删除共读数据失败:", e);
+            }
             showToast("删除成功");
         } catch (error) {
             console.error("删除书籍失败:", error);
             showToast("删除失败");
         }
     }
+
+    // --- 共读增强：书架 / 笔记库页签 ---
+    const tabBooksBtn = document.getElementById('bookshelf-tab-books');
+    const tabNotesBtn = document.getElementById('bookshelf-tab-notes');
+    const notesListEl = document.getElementById('bookshelf-notes-list');
+    let currentShelfTab = 'books';
+
+    function escapeHtmlNote(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // 笔记详情 modal DOM 注入
+    const noteModalHtml = `
+        <div class="reader-note-modal-overlay" id="reader-note-modal">
+            <div class="reader-note-modal-window">
+                <div class="reader-note-modal-header">
+                    <span id="reader-note-modal-title">笔记</span>
+                    <button class="reader-settings-close" id="reader-note-modal-close">×</button>
+                </div>
+                <div class="reader-note-modal-meta" id="reader-note-modal-meta"></div>
+                <div class="reader-note-modal-content" id="reader-note-modal-content"></div>
+                <button class="reader-note-delete-btn" id="reader-note-delete-btn">删除笔记</button>
+            </div>
+        </div>
+    `;
+    const bookshelfScreenEl = document.getElementById('reader-bookshelf-screen');
+    (bookshelfScreenEl || document.body).insertAdjacentHTML('beforeend', noteModalHtml);
+
+    const noteModal = document.getElementById('reader-note-modal');
+    const noteModalTitle = document.getElementById('reader-note-modal-title');
+    const noteModalMeta = document.getElementById('reader-note-modal-meta');
+    const noteModalContent = document.getElementById('reader-note-modal-content');
+    const noteModalCloseBtn = document.getElementById('reader-note-modal-close');
+    const noteDeleteBtn = document.getElementById('reader-note-delete-btn');
+    let currentNoteId = null;
+
+    function switchShelfTab(tab) {
+        currentShelfTab = tab;
+        if (!tabBooksBtn || !tabNotesBtn || !bookshelfGrid || !notesListEl) return;
+        tabBooksBtn.classList.toggle('active', tab === 'books');
+        tabNotesBtn.classList.toggle('active', tab === 'notes');
+        bookshelfGrid.style.display = (tab === 'books') ? '' : 'none';
+        notesListEl.style.display = (tab === 'notes') ? 'block' : 'none';
+        if (tab === 'notes') renderNotes();
+    }
+
+    if (tabBooksBtn) tabBooksBtn.addEventListener('click', () => switchShelfTab('books'));
+    if (tabNotesBtn) tabNotesBtn.addEventListener('click', () => switchShelfTab('notes'));
+
+    // 渲染笔记库：全部笔记按时间倒序
+    async function renderNotes() {
+        if (!notesListEl) return;
+        let notes = [];
+        try {
+            notes = await dexieDB.reader_notes.orderBy('timestamp').reverse().toArray();
+        } catch (e) {
+            console.error("加载笔记失败:", e);
+            notes = [];
+        }
+        if (notes.length === 0) {
+            notesListEl.innerHTML = '<div class="notes-empty">还没有笔记，去阅读页「共读」面板生成一篇吧</div>';
+            return;
+        }
+        const chars = (typeof db !== 'undefined' && db.characters) || [];
+        const htmlParts = [];
+        for (const note of notes) {
+            const char = chars.find(c => c.id === note.charId);
+            const charName = char ? (char.remarkName || char.realName || '角色') : '角色';
+            const avatar = (char && char.avatar) ? char.avatar : 'https://i.postimg.cc/Y96LPskq/o-o-2.jpg';
+            let bookTitle = '未知书籍';
+            try {
+                const book = await dexieDB.reader_books.get(note.bookId);
+                if (book) bookTitle = book.title;
+            } catch (e) {}
+            const d = new Date(note.timestamp);
+            const timeStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            const badge = note.type === 'coread' ? '共读' : 'TA';
+            const preview = note.content.length > 80 ? note.content.slice(0, 80) + '…' : note.content;
+            htmlParts.push(`
+                <div class="reader-note-card" data-id="${note.id}">
+                    <div class="reader-note-card-top">
+                        <span class="reader-note-badge ${note.type === 'coread' ? 'coread' : 'char'}">${badge}</span>
+                        <span class="reader-note-book">《${escapeHtmlNote(bookTitle)}》${escapeHtmlNote(note.chapterTitle || '')}</span>
+                        <span class="reader-note-time">${timeStr}</span>
+                    </div>
+                    <div class="reader-note-card-char">
+                        <img class="reader-note-avatar" src="${escapeHtmlNote(avatar)}" alt="">
+                        <span>${escapeHtmlNote(charName)}</span>
+                    </div>
+                    <div class="reader-note-preview">${escapeHtmlNote(preview)}</div>
+                </div>
+            `);
+        }
+        notesListEl.innerHTML = htmlParts.join('');
+        notesListEl.querySelectorAll('.reader-note-card').forEach(card => {
+            card.addEventListener('click', () => openNoteModal(parseInt(card.dataset.id)));
+        });
+    }
+
+    // 笔记详情 modal
+    async function openNoteModal(noteId) {
+        let note;
+        try {
+            note = await dexieDB.reader_notes.get(noteId);
+        } catch (e) {
+            note = null;
+        }
+        if (!note) {
+            showToast('笔记不存在');
+            return;
+        }
+        currentNoteId = noteId;
+        const chars = (typeof db !== 'undefined' && db.characters) || [];
+        const char = chars.find(c => c.id === note.charId);
+        const charName = char ? (char.remarkName || char.realName || '角色') : '角色';
+        let bookTitle = '未知书籍';
+        try {
+            const book = await dexieDB.reader_books.get(note.bookId);
+            if (book) bookTitle = book.title;
+        } catch (e) {}
+        const d = new Date(note.timestamp);
+        const timeStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        const badge = note.type === 'coread' ? '共读笔记' : 'TA的读书笔记';
+        noteModalTitle.textContent = badge;
+        noteModalMeta.textContent = `《${bookTitle}》${note.chapterTitle || ''} · ${charName} · ${timeStr}`;
+        noteModalContent.innerHTML = escapeHtmlNote(note.content).replace(/\n/g, '<br>');
+        noteModal.classList.add('visible');
+    }
+
+    function closeNoteModal() {
+        noteModal.classList.remove('visible');
+        currentNoteId = null;
+    }
+
+    noteModalCloseBtn.addEventListener('click', closeNoteModal);
+    noteModal.addEventListener('click', (e) => {
+        if (e.target === noteModal) closeNoteModal();
+    });
+    noteDeleteBtn.addEventListener('click', async () => {
+        if (!currentNoteId) return;
+        if (!confirm('确定要删除这篇笔记吗？')) return;
+        try {
+            await dexieDB.reader_notes.delete(currentNoteId);
+            showToast('已删除');
+        } catch (e) {
+            console.error("删除笔记失败:", e);
+            showToast('删除失败');
+        }
+        closeNoteModal();
+        renderNotes();
+    });
 
     // 上传文件事件
     if (uploadBtn && fileUploadInput) {
@@ -55327,6 +56334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isActive = mutation.target.classList.contains('active');
                 if (isActive && !lastActiveState) {
                     renderBookshelf();
+                    if (currentShelfTab === 'notes') renderNotes();
                 }
                 lastActiveState = isActive;
             }
@@ -56893,6 +57901,96 @@ document.addEventListener('DOMContentLoaded', () => {
             currentChapterIndex: currentChapterIndex
         };
     };
+    // 共读增强：实时阅读进度信息（供聊天提示词同步与弹幕范围提取）
+    window.readerView.getProgressInfo = function() {
+        if (!currentBook || currentChapters.length === 0) return null;
+        let page = 1;
+        let pages = 1;
+        let chapterProgress = 0;
+        if (readMode === 'scroll') {
+            // 上下滚动模式：虚拟页 = ceil(scrollHeight / clientHeight)，当前虚拟页 = floor(scrollTop / clientHeight)（1 起）
+            const h = contentArea.clientHeight || 1;
+            // 用 contentArea.scrollHeight（含 padding），与 getTotalPages 口径一致，保证底部虚拟页可达
+            pages = Math.max(1, Math.ceil(contentArea.scrollHeight / h));
+            page = Math.min(pages, Math.floor(contentArea.scrollTop / h) + 1);
+            const maxScroll = contentArea.scrollHeight - contentArea.clientHeight;
+            chapterProgress = maxScroll > 0 ? contentArea.scrollTop / maxScroll : 0;
+        } else {
+            pages = totalPages;
+            page = currentPage + 1;
+            chapterProgress = totalPages > 1 ? currentPage / totalPages : 0;
+        }
+        const totalProgress = ((currentChapterIndex + chapterProgress) / currentChapters.length) * 100;
+        const chapter = currentChapters[currentChapterIndex] || {};
+        return {
+            bookId: currentBook.id,
+            bookTitle: currentBook.title,
+            chapterIndex: currentChapterIndex,
+            chapterTitle: chapter.title || '',
+            chapterCount: currentChapters.length,
+            page: page,
+            totalPages: pages,
+            totalProgress: totalProgress.toFixed(1),
+            readMode: readMode
+        };
+    };
+
+    // 共读增强：获取某虚拟页（0 起）包含的段落文本（供弹幕范围提取）
+    window.readerView.getPageText = function(pageIdx) {
+        if (!currentBook || currentChapters.length === 0) return null;
+        const paras = Array.from(document.querySelectorAll('#reader-text-content p[data-index]'));
+        if (paras.length === 0) return null;
+        let picked = [];
+        if (readMode === 'scroll') {
+            // 坐标统一：换算到 contentArea 滚动坐标系（p.offsetTop 相对 textContainer，差一个 padding-top）
+            const h = contentArea.clientHeight || 1;
+            const start = pageIdx * h;
+            const end = (pageIdx + 1) * h;
+            const contentRect = contentArea.getBoundingClientRect();
+            picked = paras.filter(p => {
+                const pTop = p.getBoundingClientRect().top - contentRect.top + contentArea.scrollTop;
+                return pTop >= start && pTop < end;
+            });
+        } else {
+            // 分桶须计入 column-gap：列距 pitch = 列宽 + gap（否则长章页码漂移）
+            const gapVal = parseFloat(getComputedStyle(textContainer).columnGap);
+            const gap = isNaN(gapVal) ? 0 : gapVal;
+            const pitch = (contentArea.clientWidth || 1) + gap;
+            picked = paras.filter(p => Math.round(p.offsetLeft / pitch) === pageIdx);
+        }
+        if (picked.length === 0) return null;
+        const text = picked.map(p => {
+            const clone = p.cloneNode(true);
+            clone.querySelectorAll('.reader-inline-comment-icon').forEach(icon => icon.remove());
+            return clone.textContent.trim();
+        }).filter(t => t !== '').join('\n');
+        return {
+            text: text,
+            paraStart: parseInt(picked[0].dataset.index),
+            paraEnd: parseInt(picked[picked.length - 1].dataset.index)
+        };
+    };
+
+    // 共读增强：总页数（page 模式 totalPages；scroll 模式虚拟页数）
+    window.readerView.getTotalPages = function() {
+        if (readMode === 'scroll') {
+            const h = contentArea.clientHeight || 1;
+            // 含 padding 的口径：底部虚拟页 = floor(maxScrollTop / h) 必须可达
+            return Math.max(1, Math.ceil(contentArea.scrollHeight / h));
+        }
+        // page 模式直接返回 calculatePages() 的结果（scrollWidth/clientWidth 口径），保持一致
+        return totalPages;
+    };
+
+    // 共读增强：当前页（0 起）
+    window.readerView.getCurrentPage = function() {
+        if (readMode === 'scroll') {
+            const h = contentArea.clientHeight || 1;
+            return Math.floor(contentArea.scrollTop / h);
+        }
+        return currentPage;
+    };
+
     window.readerView.openCommentPanel = openCommentPanel;
     window.readerView.updateCommentIcon = updateCommentIcon;
 });
@@ -57956,11 +59054,811 @@ document.addEventListener('DOMContentLoaded', () => {
     window.readerCoread = {
         startCoread: openCharModal,
         followUp: followUp,
-        renderCoreadItem: renderCoreadItem
+        renderCoreadItem: renderCoreadItem,
+        callLlm: callCoreadLlm
     };
 });
 
 </script> <!-- 阅读器共读模块 -->
+<script>
+/* ==== js/modules/reader_companion.js ==== */
+// --- 共读增强模块 (js/modules/reader_companion.js) ---
+// v1.9.4：①阅读进度实时同步进聊天提示词 ②弹幕吐槽（本章/当页/自选页，点弹幕纯对话讨论）
+// ③本章读书笔记（共读/TA两种）入书架页笔记库 ④共读世界书勾选注入 LLM 上下文
+
+document.addEventListener('DOMContentLoaded', () => {
+    const readerScreen = document.getElementById('reader-view-screen');
+    if (!readerScreen) return;
+
+    const FALLBACK_AVATAR = 'https://i.postimg.cc/Y96LPskq/o-o-2.jpg';
+
+    // ---------- DOM 注入：弹幕层 + 共读面板 + 讨论弹窗 ----------
+    const companionHtml = `
+        <div id="reader-danmaku-layer"></div>
+        <div class="reader-companion-overlay" id="reader-companion-overlay">
+            <div class="reader-companion-panel">
+                <div class="reader-companion-header">
+                    <span>共读</span>
+                    <button class="reader-settings-close" id="reader-companion-close">×</button>
+                </div>
+                <div class="reader-companion-content">
+                    <div class="companion-section-title">选择共读角色</div>
+                    <div class="companion-char-row" id="companion-char-row"></div>
+                    <div class="companion-collapse" id="companion-wb-toggle">
+                        <span>世界书设定（勾选注入共读上下文）</span>
+                        <span class="companion-collapse-arrow" id="companion-wb-arrow">▾</span>
+                    </div>
+                    <div class="companion-wb-list" id="companion-wb-list" style="display: none;"></div>
+                    <div class="companion-section-title">吐槽范围</div>
+                    <div class="companion-range-row">
+                        <label><input type="radio" name="companion-range" value="chapter" checked> 本章</label>
+                        <label><input type="radio" name="companion-range" value="page"> 当页</label>
+                        <label><input type="radio" name="companion-range" value="custom"> 自选页</label>
+                    </div>
+                    <div class="companion-custom-pages" id="companion-custom-pages" style="display: none;">
+                        第 <input type="number" id="companion-page-from" min="1" value="1"> 页 ~
+                        第 <input type="number" id="companion-page-to" min="1" value="1"> 页
+                    </div>
+                    <div class="companion-btn-row">
+                        <button class="companion-action-btn primary" id="companion-fire-btn">🎯 来一条吐槽</button>
+                        <button class="companion-action-btn" id="companion-note-coread-btn">📝 共读笔记</button>
+                        <button class="companion-action-btn" id="companion-note-char-btn">📓 TA的笔记</button>
+                    </div>
+                    <label class="companion-sync-row">
+                        <input type="checkbox" id="companion-sync-checkbox">
+                        聊天时告诉 TA 我的阅读进度
+                    </label>
+                    <div class="companion-collapse" id="companion-history-toggle">
+                        <span>历史弹幕</span>
+                        <span class="companion-collapse-arrow" id="companion-history-arrow">▾</span>
+                    </div>
+                    <div class="companion-history-list" id="companion-history-list" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="coread-discuss-overlay" id="coread-discuss-modal">
+            <div class="coread-discuss-window">
+                <div class="coread-discuss-header">
+                    <img class="coread-avatar" id="discuss-char-avatar" src="" alt="">
+                    <span class="coread-discuss-name" id="discuss-char-name">角色</span>
+                    <span class="coread-discuss-title">讨论这条弹幕</span>
+                    <button class="reader-settings-close" id="discuss-close-btn">×</button>
+                </div>
+                <div class="coread-discuss-quote" id="discuss-quote"></div>
+                <div class="coread-discuss-thread" id="discuss-thread"></div>
+                <div class="coread-discuss-input-area">
+                    <input type="text" id="discuss-input" placeholder="和 TA 讨论这条弹幕...">
+                    <button id="discuss-send-btn">发送</button>
+                </div>
+            </div>
+        </div>
+    `;
+    readerScreen.insertAdjacentHTML('beforeend', companionHtml);
+
+    const danmakuLayer = document.getElementById('reader-danmaku-layer');
+    const companionBtn = document.getElementById('reader-companion-btn');
+    const overlay = document.getElementById('reader-companion-overlay');
+    const closeBtn = document.getElementById('reader-companion-close');
+    const charRowEl = document.getElementById('companion-char-row');
+    const wbToggle = document.getElementById('companion-wb-toggle');
+    const wbArrow = document.getElementById('companion-wb-arrow');
+    const wbListEl = document.getElementById('companion-wb-list');
+    const customPagesEl = document.getElementById('companion-custom-pages');
+    const pageFromInput = document.getElementById('companion-page-from');
+    const pageToInput = document.getElementById('companion-page-to');
+    const fireBtn = document.getElementById('companion-fire-btn');
+    const noteCoreadBtn = document.getElementById('companion-note-coread-btn');
+    const noteCharBtn = document.getElementById('companion-note-char-btn');
+    const syncCheckbox = document.getElementById('companion-sync-checkbox');
+    const historyToggle = document.getElementById('companion-history-toggle');
+    const historyArrow = document.getElementById('companion-history-arrow');
+    const historyListEl = document.getElementById('companion-history-list');
+
+    const discussModal = document.getElementById('coread-discuss-modal');
+    const discussAvatar = document.getElementById('discuss-char-avatar');
+    const discussName = document.getElementById('discuss-char-name');
+    const discussQuote = document.getElementById('discuss-quote');
+    const discussThread = document.getElementById('discuss-thread');
+    const discussInput = document.getElementById('discuss-input');
+    const discussSendBtn = document.getElementById('discuss-send-btn');
+    const discussCloseBtn = document.getElementById('discuss-close-btn');
+
+    let selectedCharId = localStorage.getItem('coread_last_char') || null;
+    let danmakuBusy = false;
+    let noteBusy = false;
+    let discussBusy = false;
+    let currentDiscussId = null;
+
+    // ---------- 工具函数（仿 reader_coread.js） ----------
+    function escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function toast(msg) {
+        if (typeof showToast === 'function') showToast(msg);
+    }
+
+    function getCharName(char) {
+        return char.remarkName || char.realName || '角色';
+    }
+
+    function getUserName(char) {
+        return char.myRemarkName || char.myName || '朋友';
+    }
+
+    function findChar(charId) {
+        return ((typeof db !== 'undefined' && db.characters) || []).find(c => c.id === charId) || null;
+    }
+
+    function getReaderCtx() {
+        return (window.readerView && window.readerView.getReaderContext)
+            ? window.readerView.getReaderContext()
+            : null;
+    }
+
+    // 长文本中间截断：头部 headLen + '\n……\n' + 尾部 tailLen
+    function truncateMiddle(text, maxLen, headLen, tailLen) {
+        if (!text || text.length <= maxLen) return text || '';
+        return text.slice(0, headLen) + '\n……\n' + text.slice(-tailLen);
+    }
+
+    // 调 LLM：优先复用 reader_coread.js 暴露的 callLlm；未暴露时本模块自调同款链路
+    async function callLlm(messages) {
+        if (window.readerCoread && typeof window.readerCoread.callLlm === 'function') {
+            return window.readerCoread.callLlm(messages);
+        }
+        const llmConfig = resolveWorkshopLlmApiConfig();
+        if (!llmConfig.url || !llmConfig.key || !llmConfig.model) {
+            throw new Error('请先配置工坊独立 LLM API 或主 API');
+        }
+        const { requestBody, endpoint, headers } = buildChatApiRequest(llmConfig, messages, { temperature: 0.8 });
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestBody)
+        });
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`LLM 请求失败 (${response.status}): ${errText}`);
+        }
+        const data = await response.json();
+        let text = '';
+        if (llmConfig.provider === 'gemini') {
+            text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        } else {
+            text = data.choices?.[0]?.message?.content || '';
+        }
+        text = text.replace(/<thinking>[\s\S]*?<\/thinking>/g, '').trim();
+        if (!text) throw new Error('TA 暂时没有回应，请稍后再试');
+        return text;
+    }
+
+    // ---------- 世界书勾选持久化：localStorage coread_wb_{bookId}_{charId} → JSON 数组 ----------
+    function wbStorageKey(bookId, charId) {
+        return `coread_wb_${bookId}_${charId}`;
+    }
+
+    function getCheckedWbIds(bookId, charId) {
+        try {
+            const arr = JSON.parse(localStorage.getItem(wbStorageKey(bookId, charId)) || '[]');
+            return Array.isArray(arr) ? arr : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setCheckedWbIds(bookId, charId, ids) {
+        localStorage.setItem(wbStorageKey(bookId, charId), JSON.stringify(ids));
+    }
+
+    // 勾选世界书 → 注入文本块（各 wb.content 截 2000 字，总量 ≤6000）
+    function buildWorldBookBlock(bookId, charId) {
+        const ids = getCheckedWbIds(bookId, charId);
+        if (!ids.length) return '';
+        const books = ((typeof db !== 'undefined' && db.worldBooks) || [])
+            .filter(wb => wb.type !== 'folder' && ids.includes(wb.id));
+        if (!books.length) return '';
+        let total = 0;
+        const parts = [];
+        for (const wb of books) {
+            const content = String(wb.content || '').slice(0, 2000);
+            if (!content) continue;
+            if (total + content.length > 6000) break;
+            total += content.length;
+            parts.push(`【${wb.name || '未命名'}】\n${content}`);
+        }
+        if (!parts.length) return '';
+        return `\n以下是你需要了解的背景设定：\n${parts.join('\n\n')}\n`;
+    }
+
+    // ---------- 共读面板开关 ----------
+    function openPanel() {
+        renderCharRow();
+        renderWbList();
+        renderHistory();
+        syncCheckbox.checked = localStorage.getItem('coread_sync_progress') !== '0';
+        overlay.classList.add('active');
+    }
+
+    function closePanel() {
+        overlay.classList.remove('active');
+    }
+
+    if (companionBtn) {
+        companionBtn.addEventListener('click', () => {
+            if (overlay.classList.contains('active')) {
+                closePanel();
+            } else {
+                openPanel();
+            }
+        });
+    }
+    closeBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closePanel();
+    });
+
+    // ---------- 角色行：横向滚动头像列表，单选高亮，记住上次（与 coread 共用 coread_last_char） ----------
+    function renderCharRow() {
+        const chars = (typeof db !== 'undefined' && db.characters) || [];
+        if (chars.length === 0) {
+            charRowEl.innerHTML = '<div class="companion-empty-hint">还没有角色，先去创建一个角色吧</div>';
+            return;
+        }
+        if (!selectedCharId || !findChar(selectedCharId)) {
+            selectedCharId = chars[0].id;
+        }
+        charRowEl.innerHTML = chars.map(char => `
+            <div class="companion-char-item ${char.id === selectedCharId ? 'active' : ''}" data-char-id="${escapeHtml(char.id)}">
+                <img class="companion-char-avatar" src="${escapeHtml(char.avatar || FALLBACK_AVATAR)}" alt="">
+                <span class="companion-char-name">${escapeHtml(getCharName(char))}</span>
+            </div>
+        `).join('');
+        charRowEl.querySelectorAll('.companion-char-item').forEach(item => {
+            item.addEventListener('click', () => {
+                selectedCharId = item.dataset.charId;
+                localStorage.setItem('coread_last_char', selectedCharId);
+                renderCharRow();
+                renderWbList(); // 切换角色后重新加载对应勾选状态
+            });
+        });
+    }
+
+    // ---------- 世界书勾选区 ----------
+    function renderWbList() {
+        const books = ((typeof db !== 'undefined' && db.worldBooks) || []).filter(wb => wb.type !== 'folder');
+        if (books.length === 0) {
+            wbListEl.innerHTML = '<div class="companion-empty-hint">还没有世界书条目</div>';
+            return;
+        }
+        const ctx = getReaderCtx();
+        const bookId = (ctx && ctx.currentBook) ? ctx.currentBook.id : null;
+        const checked = (bookId && selectedCharId) ? getCheckedWbIds(bookId, selectedCharId) : [];
+        wbListEl.innerHTML = books.map(wb => `
+            <label class="companion-wb-item">
+                <input type="checkbox" data-wb-id="${escapeHtml(wb.id)}" ${checked.includes(wb.id) ? 'checked' : ''}>
+                <span>${escapeHtml(wb.name || '未命名')}</span>
+            </label>
+        `).join('');
+        wbListEl.querySelectorAll('input[type="checkbox"]').forEach(box => {
+            box.addEventListener('change', () => {
+                const ctx2 = getReaderCtx();
+                const bookId2 = (ctx2 && ctx2.currentBook) ? ctx2.currentBook.id : null;
+                if (!bookId2 || !selectedCharId) {
+                    toast('请先加载书籍并选择角色');
+                    box.checked = false;
+                    return;
+                }
+                const ids = Array.from(wbListEl.querySelectorAll('input[type="checkbox"]:checked'))
+                    .map(b => b.dataset.wbId);
+                setCheckedWbIds(bookId2, selectedCharId, ids);
+            });
+        });
+    }
+
+    // 可折叠区通用绑定
+    function bindCollapse(toggleEl, arrowEl, listEl) {
+        toggleEl.addEventListener('click', () => {
+            const isHidden = listEl.style.display === 'none';
+            listEl.style.display = isHidden ? 'block' : 'none';
+            arrowEl.textContent = isHidden ? '▴' : '▾';
+        });
+    }
+    bindCollapse(wbToggle, wbArrow, wbListEl);
+    bindCollapse(historyToggle, historyArrow, historyListEl);
+
+    // ---------- 吐槽范围行 ----------
+    document.querySelectorAll('input[name="companion-range"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            const val = document.querySelector('input[name="companion-range"]:checked').value;
+            customPagesEl.style.display = (val === 'custom') ? 'block' : 'none';
+        });
+    });
+
+    // 同步开关
+    syncCheckbox.addEventListener('change', () => {
+        localStorage.setItem('coread_sync_progress', syncCheckbox.checked ? '1' : '0');
+    });
+
+    // ---------- 按范围取文本 ----------
+    function getRangeText() {
+        const ctx = getReaderCtx();
+        if (!ctx || !ctx.currentBook) return null;
+        const { currentChapters, currentChapterIndex } = ctx;
+        const chapter = currentChapters[currentChapterIndex] || {};
+        const rangeType = document.querySelector('input[name="companion-range"]:checked').value;
+
+        if (rangeType === 'chapter') {
+            return {
+                rangeType: rangeType,
+                rangeDesc: '本章',
+                text: truncateMiddle(chapter.content || '', 6000, 3000, 3000)
+            };
+        }
+
+        if (rangeType === 'page') {
+            const cur = window.readerView.getCurrentPage();
+            const pt = window.readerView.getPageText(cur);
+            if (!pt || !pt.text) return { rangeType: rangeType, rangeDesc: `第${cur + 1}页`, text: '' };
+            // 当页文本也做中间截断（≤3000 字，头1500+尾1500）
+            return { rangeType: rangeType, rangeDesc: `第${cur + 1}页`, text: truncateMiddle(pt.text, 3000, 1500, 1500) };
+        }
+
+        // 自选页：X..Y（1 起，Y≥X，clamp 到总页数）
+        const total = window.readerView.getTotalPages();
+        let from = parseInt(pageFromInput.value) || 1;
+        let to = parseInt(pageToInput.value) || 1;
+        from = Math.max(1, Math.min(from, total));
+        to = Math.max(from, Math.min(to, total));
+        pageFromInput.value = from;
+        pageToInput.value = to;
+        const parts = [];
+        for (let i = from; i <= to; i++) {
+            const pt = window.readerView.getPageText(i - 1);
+            if (pt && pt.text) parts.push(pt.text);
+        }
+        return {
+            rangeType: rangeType,
+            rangeDesc: `第${from}~${to}页`,
+            text: truncateMiddle(parts.join('\n'), 6000, 3000, 3000)
+        };
+    }
+
+    // ---------- 弹幕生成与飞过动画 ----------
+    async function fireDanmaku() {
+        const char = findChar(selectedCharId);
+        if (!char) {
+            toast('请先选择共读角色');
+            return;
+        }
+        const ctx = getReaderCtx();
+        if (!ctx || !ctx.currentBook) {
+            toast('请先加载书籍');
+            return;
+        }
+        if (danmakuBusy) {
+            toast('TA 正在吐槽中，请稍候');
+            return;
+        }
+        const { currentBook, currentChapters, currentChapterIndex } = ctx;
+        const chapter = currentChapters[currentChapterIndex] || {};
+
+        const range = getRangeText();
+        if (!range || !range.text.trim()) {
+            toast('所选范围没有可取到的文本');
+            return;
+        }
+
+        const charName = getCharName(char);
+        const userName = getUserName(char);
+        const desc = (char.persona || char.description || '').slice(0, 800);
+        let systemPrompt = `你是${charName}。`;
+        if (desc) systemPrompt += `\n以下是你的人设：\n${desc}\n`;
+        systemPrompt += buildWorldBookBlock(currentBook.id, char.id);
+        systemPrompt += `\n你正和 ${userName} 一起读《${currentBook.title}》第${currentChapterIndex + 1}章「${chapter.title || ''}」。针对下面的原文，以你的性格发一条吐槽/点评——像弹幕一样短促有力，60字以内，口语化，可以损可以夸可以玩梗，不要书评腔，不要动作描写，只输出吐槽本体一句话。`;
+
+        const messages = [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `【吐槽范围：${range.rangeDesc}】\n${range.text}` }
+        ];
+
+        danmakuBusy = true;
+        toast('正在等待 TA 的吐槽...');
+        try {
+            const text = await callLlm(messages);
+            const id = await dexieDB.reader_danmaku.add({
+                bookId: currentBook.id,
+                charId: char.id,
+                chapterIndex: currentChapterIndex,
+                rangeType: range.rangeType,
+                rangeDesc: range.rangeDesc,
+                excerpt: range.text.slice(0, 500),
+                text: text,
+                thread: [],
+                timestamp: Date.now()
+            });
+            // 弹幕动画层级低于面板遮罩（z-index 210），先关闭共读面板再发射
+            closePanel();
+            launchDanmaku({ id: id, charId: char.id, text: text });
+            renderHistory();
+        } catch (error) {
+            console.error('弹幕生成失败:', error);
+            toast(error.message || '弹幕生成失败');
+        } finally {
+            danmakuBusy = false;
+        }
+    }
+
+    // 发射弹幕 pill：右→左飞过，top 随机 12%~68%，时长 8~13s，animationend 移除
+    function launchDanmaku(record) {
+        const char = findChar(record.charId);
+        const pill = document.createElement('div');
+        pill.className = 'reader-danmaku-pill';
+        const display = record.text.length > 40 ? record.text.slice(0, 40) + '…' : record.text;
+        pill.title = record.text;
+        pill.innerHTML = `<img class="danmaku-avatar" src="${escapeHtml((char && char.avatar) || FALLBACK_AVATAR)}" alt=""><span>${escapeHtml(display)}</span>`;
+        pill.style.top = (12 + Math.random() * 56) + '%';
+        pill.style.animationDuration = (8 + Math.random() * 5) + 's';
+        pill.addEventListener('animationend', () => pill.remove());
+        pill.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pill.style.animationPlayState = 'paused';
+            openDiscuss(record.id);
+        });
+        danmakuLayer.appendChild(pill);
+    }
+
+    fireBtn.addEventListener('click', fireDanmaku);
+
+    // ---------- 讨论弹窗（纯对话） ----------
+    async function openDiscuss(danmakuId) {
+        let record;
+        try {
+            record = await dexieDB.reader_danmaku.get(danmakuId);
+        } catch (e) {
+            record = null;
+        }
+        if (!record) {
+            toast('弹幕记录不存在');
+            return;
+        }
+        currentDiscussId = danmakuId;
+        const char = findChar(record.charId);
+        discussAvatar.src = (char && char.avatar) || FALLBACK_AVATAR;
+        discussName.textContent = char ? getCharName(char) : '角色';
+        discussQuote.textContent = record.text;
+        renderThread(record);
+        discussModal.classList.add('visible');
+    }
+
+    function renderThread(record) {
+        const char = findChar(record.charId);
+        const charName = char ? getCharName(char) : '角色';
+        const avatar = (char && char.avatar) || FALLBACK_AVATAR;
+        const thread = record.thread || [];
+        if (thread.length === 0) {
+            discussThread.innerHTML = '<div class="discuss-empty">还没有讨论，说点什么吧</div>';
+            return;
+        }
+        discussThread.innerHTML = thread.map(m => {
+            if (m.role === 'user') {
+                return `<div class="coread-bubble-row user"><div class="coread-bubble user">${escapeHtml(m.text)}</div></div>`;
+            }
+            return `
+                <div class="coread-bubble-row">
+                    <img class="coread-avatar" src="${escapeHtml(avatar)}" alt="">
+                    <div class="coread-bubble-main">
+                        <div class="coread-char-name">${escapeHtml(charName)}</div>
+                        <div class="coread-bubble">${escapeHtml(m.text)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        discussThread.scrollTop = discussThread.scrollHeight;
+    }
+
+    function closeDiscuss() {
+        discussModal.classList.remove('visible');
+        currentDiscussId = null;
+        // 恢复被暂停的弹幕动画，使其飞完后自动移除
+        danmakuLayer.querySelectorAll('.reader-danmaku-pill').forEach(p => {
+            p.style.animationPlayState = '';
+        });
+    }
+
+    discussCloseBtn.addEventListener('click', closeDiscuss);
+    discussModal.addEventListener('click', (e) => {
+        if (e.target === discussModal) closeDiscuss();
+    });
+
+    async function sendDiscuss() {
+        const text = discussInput.value.trim();
+        if (!text) {
+            toast('请输入内容');
+            return;
+        }
+        if (discussBusy) {
+            toast('TA 正在回应中，请稍候');
+            return;
+        }
+        // 忙碌标志前置：文本校验通过后、任何 await 之前立即置位，防连点竞态丢消息
+        discussBusy = true;
+        try {
+            // 读 thread→push→update 包进事务，防读改写丢更新
+            const record = await dexieDB.transaction('rw', dexieDB.reader_danmaku, async () => {
+                const rec = await dexieDB.reader_danmaku.get(currentDiscussId);
+                if (!rec) return null;
+                rec.thread = rec.thread || [];
+                rec.thread.push({ role: 'user', text: text, timestamp: Date.now() });
+                await dexieDB.reader_danmaku.update(rec.id, { thread: rec.thread });
+                return rec;
+            });
+            if (!record) {
+                toast('弹幕记录不存在');
+                return;
+            }
+            const char = findChar(record.charId);
+            if (!char) {
+                toast('角色不存在');
+                return;
+            }
+
+            discussInput.value = '';
+            // 1. user 消息已入库，渲染
+            renderThread(record);
+            toast('正在等待 TA 的回应...');
+            // 书籍信息：优先取阅读器实时上下文，回退查库
+            let bookTitle = '';
+            let chapterTitle = '';
+            const ctx = getReaderCtx();
+            if (ctx && ctx.currentBook && ctx.currentBook.id === record.bookId) {
+                bookTitle = ctx.currentBook.title;
+                const ch = ctx.currentChapters[record.chapterIndex] || {};
+                chapterTitle = ch.title || '';
+            } else {
+                const book = await dexieDB.reader_books.get(record.bookId);
+                bookTitle = book ? book.title : '';
+            }
+
+            const charName = getCharName(char);
+            const userName = getUserName(char);
+            const desc = (char.persona || char.description || '').slice(0, 800);
+            let systemPrompt = `你是${charName}。`;
+            if (desc) systemPrompt += `\n以下是你的人设：\n${desc}\n`;
+            systemPrompt += buildWorldBookBlock(record.bookId, char.id);
+            systemPrompt += `\n你正和 ${userName} 一起读《${bookTitle}》第${record.chapterIndex + 1}章。刚才你发了一条弹幕吐槽：「${record.text}」。现在 ${userName} 就这条吐槽和你讨论。\n严格规则：纯文字对话，像发微信一样说话；绝对禁止任何动作、神态、环境描写；禁止使用任何括号（含（）【】*）做旁白或动作；每次回复 80 字以内。`;
+
+            // 只取最近 20 条，总量截 3000 字（保留最新内容优先）
+            const dialogLines = (record.thread || []).slice(-20)
+                .map(m => `${m.role === 'user' ? userName : charName}: ${m.text}`);
+            let dialogText = '';
+            for (let i = dialogLines.length - 1; i >= 0; i--) {
+                const candidate = dialogLines[i] + (dialogText ? '\n' + dialogText : '');
+                if (candidate.length > 3000) break;
+                dialogText = candidate;
+            }
+            const userContent = `【原文片段】${record.excerpt || ''}\n\n【我们的讨论】\n${dialogText}\n\n回应 ${userName} 的最新发言。`;
+
+            const reply = await callLlm([
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userContent }
+            ]);
+
+            record.thread.push({ role: 'char', text: reply, timestamp: Date.now() });
+            await dexieDB.reader_danmaku.update(record.id, { thread: record.thread });
+            // 在途期间用户可能已切换弹幕串窗：不符则只入库不渲染
+            if (currentDiscussId === record.id) renderThread(record);
+        } catch (error) {
+            console.error('弹幕讨论失败:', error);
+            toast(error.message || '讨论失败');
+        } finally {
+            discussBusy = false;
+        }
+    }
+
+    discussSendBtn.addEventListener('click', sendDiscuss);
+    discussInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendDiscuss();
+    });
+
+    // ---------- 历史弹幕区 ----------
+    async function renderHistory() {
+        const ctx = getReaderCtx();
+        if (!ctx || !ctx.currentBook) {
+            historyListEl.innerHTML = '<div class="companion-empty-hint">请先加载书籍</div>';
+            return;
+        }
+        let records = [];
+        try {
+            records = await dexieDB.reader_danmaku.where('bookId').equals(ctx.currentBook.id).toArray();
+        } catch (e) {
+            records = [];
+        }
+        records.sort((a, b) => b.timestamp - a.timestamp); // 时间倒序
+        if (records.length === 0) {
+            historyListEl.innerHTML = '<div class="companion-empty-hint">还没有弹幕，来一条吐槽吧</div>';
+            return;
+        }
+        historyListEl.innerHTML = records.map(r => {
+            const char = findChar(r.charId);
+            const name = char ? getCharName(char) : '角色';
+            const avatar = (char && char.avatar) || FALLBACK_AVATAR;
+            const d = new Date(r.timestamp);
+            const timeStr = `${d.getMonth() + 1}-${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            const preview = r.text.length > 30 ? r.text.slice(0, 30) + '…' : r.text;
+            return `
+                <div class="companion-history-item" data-id="${r.id}">
+                    <img class="companion-history-avatar" src="${escapeHtml(avatar)}" alt="">
+                    <div class="companion-history-main">
+                        <div class="companion-history-top">
+                            <span class="companion-history-name">${escapeHtml(name)}</span>
+                            <span class="companion-history-range">${escapeHtml(r.rangeDesc || '')}</span>
+                            <span class="companion-history-time">${timeStr}</span>
+                        </div>
+                        <div class="companion-history-text">${escapeHtml(preview)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        historyListEl.querySelectorAll('.companion-history-item').forEach(item => {
+            item.addEventListener('click', () => openDiscuss(parseInt(item.dataset.id)));
+        });
+    }
+
+    // ---------- 读书笔记生成（共读笔记 / TA的笔记） ----------
+    async function generateNote(type) {
+        const char = findChar(selectedCharId);
+        if (!char) {
+            toast('请先选择共读角色');
+            return;
+        }
+        const ctx = getReaderCtx();
+        if (!ctx || !ctx.currentBook) {
+            toast('请先加载书籍');
+            return;
+        }
+        if (noteBusy) {
+            toast('正在生成笔记，请稍候');
+            return;
+        }
+        const { currentBook, currentChapters, currentChapterIndex } = ctx;
+        const chapter = currentChapters[currentChapterIndex] || {};
+        let chapterText = chapter.content || '';
+        if (!chapterText.trim()) {
+            toast('本章没有内容');
+            return;
+        }
+        // 本章全文截 8000 字（头 5000 + 尾 3000）
+        if (chapterText.length > 8000) {
+            chapterText = chapterText.slice(0, 5000) + '\n……\n' + chapterText.slice(-3000);
+        }
+
+        // 忙碌标志前置：校验通过后、第一个 await 之前立即置位，防连点重复生成
+        noteBusy = true;
+        toast('正在生成笔记...');
+        try {
+        const charName = getCharName(char);
+        const userName = getUserName(char);
+        const desc = (char.persona || char.description || '').slice(0, 800);
+        let systemPrompt = `你是${charName}。`;
+        if (desc) systemPrompt += `\n以下是你的人设：\n${desc}\n`;
+        systemPrompt += buildWorldBookBlock(currentBook.id, char.id);
+
+        let userContent = '';
+        if (type === 'char') {
+            systemPrompt += `\n你刚和 ${userName} 一起读完《${currentBook.title}》第${currentChapterIndex + 1}章「${chapter.title || ''}」。以你的性格、用第一人称写一篇你的读书笔记：真实感想、喜欢或想吐槽的段落、联想到的事。300-500字，像写日记便签，不要书评腔。`;
+            userContent = `【本章原文】\n${chapterText}`;
+        } else {
+            systemPrompt += `\n你刚和 ${userName} 一起读完《${currentBook.title}》第${currentChapterIndex + 1}章「${chapter.title || ''}」。把这一章你们的共读整理成一篇共读笔记：本章内容梗概（3-5句）、你们聊到的点（结合下面的弹幕与讨论）、你们的共鸣或分歧。400-600字。`;
+            // 汇总本书本章的弹幕与讨论（总量截 3000 字）
+            let records = [];
+            try {
+                records = await dexieDB.reader_danmaku.where('bookId').equals(currentBook.id).toArray();
+            } catch (e) {
+                records = [];
+            }
+            const chapterRecords = records
+                .filter(r => r.chapterIndex === currentChapterIndex)
+                .sort((a, b) => a.timestamp - b.timestamp);
+            let summary = '';
+            if (chapterRecords.length === 0) {
+                summary = '（本章暂无弹幕讨论）';
+            } else {
+                const parts = chapterRecords.map(r => {
+                    const c = findChar(r.charId);
+                    const name = c ? getCharName(c) : '角色';
+                    let s = `${name}: ${r.text}`;
+                    const thread = r.thread || [];
+                    if (thread.length > 0) {
+                        const digest = thread.map(m => `${m.role === 'user' ? userName : name}: ${m.text}`).join('；');
+                        s += `（讨论：${digest}）`;
+                    }
+                    return s;
+                });
+                let total = 0;
+                const kept = [];
+                for (const part of parts) {
+                    if (total + part.length > 3000) break;
+                    total += part.length;
+                    kept.push(part);
+                }
+                summary = kept.join('\n');
+            }
+            userContent = `【本章原文】\n${chapterText}\n\n【本章你们的弹幕与讨论】\n${summary}`;
+        }
+
+            const content = await callLlm([
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userContent }
+            ]);
+            await dexieDB.reader_notes.add({
+                bookId: currentBook.id,
+                chapterIndex: currentChapterIndex,
+                chapterTitle: chapter.title || '',
+                type: type,
+                charId: char.id,
+                content: content,
+                timestamp: Date.now()
+            });
+            toast('已存入笔记库');
+        } catch (error) {
+            console.error('笔记生成失败:', error);
+            toast(error.message || '笔记生成失败');
+        } finally {
+            noteBusy = false;
+        }
+    }
+
+    noteCoreadBtn.addEventListener('click', () => generateNote('coread'));
+    noteCharBtn.addEventListener('click', () => generateNote('char'));
+
+    // ---------- 聊天进度同步（chat_ai.js 注入点调用） ----------
+    async function getChatContextBlock() {
+        if (localStorage.getItem('coread_sync_progress') === '0') return '';
+        let info = (window.readerView && typeof window.readerView.getProgressInfo === 'function')
+            ? window.readerView.getProgressInfo()
+            : null;
+        let pagePart = '';
+        if (info) {
+            pagePart = `，第${info.page}/${info.totalPages}页`;
+        } else {
+            // 回退：本会话未打开阅读器时，取最近读的书（页码未知则不显示页码）
+            try {
+                const book = await dexieDB.reader_books.orderBy('lastReadTime').reverse().first();
+                if (!book) return '';
+                const chapters = await dexieDB.reader_chapters.where('bookId').equals(book.id).sortBy('index');
+                if (chapters.length === 0) return '';
+                const idx = Math.min(book.currentChapterIndex || 0, chapters.length - 1);
+                const chapter = chapters[idx] || {};
+                info = {
+                    bookTitle: book.title,
+                    chapterIndex: idx,
+                    chapterTitle: chapter.title || '',
+                    totalProgress: ((idx / chapters.length) * 100).toFixed(1)
+                };
+            } catch (e) {
+                console.error('共读进度回退查询失败:', e);
+                return '';
+            }
+        }
+        // 书名/章名各截 50 字，防 txt 首行超长进 systemPrompt
+        const bookTitle = String(info.bookTitle || '').slice(0, 50);
+        const chapterTitle = String(info.chapterTitle || '').slice(0, 50);
+        return `<共读进行时>\n用户正在阅读《${bookTitle}》第${info.chapterIndex + 1}章「${chapterTitle}」${pagePart}（全书进度 ${info.totalProgress}%）。\n这是用户的实时状态，仅供你知晓；若与当前对话相关可自然提及，否则不要主动评论。\n</共读进行时>`;
+    }
+
+    // ---------- 暴露全局接口 ----------
+    window.readerCompanion = {
+        getChatContextBlock: getChatContextBlock
+    };
+});
+
+</script> <!-- 阅读器共读增强模块 -->
 
 <!-- [4. 程序入口] -->
 <script>
@@ -58274,26 +60172,5 @@ function showGlobalRescuePanel() {
 }
 
 </script>     <!-- 主入口：初始化(init)、全局事件监听 -->
-<script type="text/template" id="community-detail-src">
-<header class="app-header chat-list-header">
-    <div class="header-left">
-        <h1 class="title">UwU 社区</h1>
-        <button class="back-btn" data-target="phone-screen">‹</button>
-    </div>
-    <div class="action-btn-group">
-        <button class="action-btn" title="发布">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </button>
-    </div>
-</header>
-
-<main class="content" style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; color: #999;">
-    <div style="font-size: 48px;">🏗️</div>
-    <h2 style="margin: 0; color: #333;">社区建设中</h2>
-    <p style="text-align: center; font-size: 14px;">你已经成功进入了 UwU 社区的隐藏入口！<br>更多功能正在快马加鞭开发中...</p>
-    <button class="btn btn-neutral back-btn" data-target="phone-screen" style="margin-top: 20px; width: auto; padding: 10px 30px;">返回</button>
-</main>
-
-</script>
 </body>
 </html>

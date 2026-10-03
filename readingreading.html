@@ -25,7 +25,6 @@
     <link rel="manifest" href="manifest.json">
     <!-- CSS Split: Base & Layout -->
     <style>
-/* inlined: css/base.css */
 /* --- 全局与主题样式 --- */
 :root {
     --bg-color: #e5eded;       /* 灰蓝：背景基础 */
@@ -467,7 +466,6 @@ label.btn-primary {
 
 </style>
     <style>
-/* inlined: css/layout.css */
 /* --- 布局与主屏幕样式 --- */
 
 .phone-screen {
@@ -1211,7 +1209,6 @@ label.btn-primary {
 
     <!-- CSS Split: Core Features -->
     <style>
-/* inlined: css/chat.css */
 /* --- 聊天相关样式 --- */
 
 :root {
@@ -3609,7 +3606,6 @@ label.btn-primary {
 
 </style>
     <style>
-/* inlined: css/settings.css */
 /* --- 设置与个人资料样式 --- */
 
 #chat-settings-screen, #group-settings-screen, #customize-screen {
@@ -4431,7 +4427,6 @@ input:checked + .kkt-slider:before {
 
     <!-- CSS Split: Modules -->
     <style>
-/* inlined: css/modules/peek.css */
 /* --- Peek (偷看) 功能样式 --- */
 
 /* Peek Settings Modal Redesign */
@@ -5593,395 +5588,393 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/moments.css */
-/* --- Moments (朋友圈) Screen Styles --- */
-
-#moments-screen {
-    background-color: #ffffff;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-#moments-screen.active {
-    display: flex;
-}
-
-.moments-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: calc(60px + env(safe-area-inset-top));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: env(safe-area-inset-top) 15px 0;
-    z-index: 10;
-    background: transparent;
-    transition: background-color 0.3s ease;
-}
-
-.moments-header.scrolled {
-    background-color: #ededed;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.moments-header .back-btn,
-.moments-header .action-btn {
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.moments-header.scrolled .back-btn,
-.moments-header.scrolled .action-btn {
-    background: transparent;
-    color: #333;
-}
-
-.moments-header .title-container {
-    flex: 1;
-    text-align: center;
-}
-
-.moments-header .title {
-    font-size: 17px;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-}
-
-.moments-content {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Cover Area */
-.moments-cover-area {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    background-color: #333;
-    margin-bottom: 40px;
-}
-
-.moments-cover-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.moments-user-info {
-    position: absolute;
-    right: 15px;
-    bottom: -25px;
-    display: flex;
-    align-items: flex-end;
-    gap: 15px;
-}
-
-.moments-user-name {
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    margin-bottom: 30px;
-}
-
-.moments-user-avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 8px;
-    border: 2px solid white;
-    background-color: #fff;
-    object-fit: cover;
-}
-
-.moments-user-signature {
-    position: absolute;
-    right: 15px;
-    bottom: -45px;
-    color: #666;
-    font-size: 13px;
-    text-align: right;
-    max-width: 70%;
-    word-wrap: break-word;
-}
-
-/* Feed Area */
-.moments-feed {
-    padding: 0;
-}
-
-.moment-item {
-    display: flex;
-    padding: 15px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.moment-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 6px;
-    margin-right: 10px;
-    flex-shrink: 0;
-    object-fit: cover;
-}
-
-.moment-main {
-    flex: 1;
-    min-width: 0;
-}
-
-.moment-name {
-    color: #576b95;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.moment-text {
-    font-size: 15px;
-    color: #333;
-    line-height: 1.5;
-    margin-bottom: 10px;
-    word-wrap: break-word;
-}
-
-.moment-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 5px;
-    margin-bottom: 10px;
-    max-width: 80%;
-}
-
-.moment-images.single {
-    grid-template-columns: 1fr;
-    max-width: 60%;
-}
-
-.moment-img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.moment-images.single .moment-img {
-    aspect-ratio: auto;
-    max-height: 200px;
-}
-
-.moment-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    position: relative;
-}
-
-.moment-time {
-    font-size: 12px;
-    color: #b2b2b2;
-}
-
-.moment-action-btn {
-    background: #f5f5f5;
-    border: none;
-    border-radius: 4px;
-    width: 32px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #576b95;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-/* Interaction Area (Likes & Comments) */
-.moment-interaction {
-    background-color: #f7f7f7;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 13px;
-    position: relative;
-}
-
-.moment-interaction::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 15px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent #f7f7f7 transparent;
-}
-
-.moment-likes {
-    color: #576b95;
-    font-weight: 500;
-    padding: 5px 0;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    border-bottom: 1px solid #ebebeb;
-}
-
-.moment-likes svg {
-    width: 12px;
-    height: 12px;
-    fill: #576b95;
-}
-
-.moment-comments {
-    padding: 5px 0;
-}
-
-.moment-comment {
-    margin-bottom: 3px;
-    line-height: 1.4;
-}
-
-.moment-comment-name {
-    color: #576b95;
-    font-weight: 500;
-}
-
-.moment-comment-text {
-    color: #333;
-}
-
-/* Comment Input Area */
-.moments-comment-input-area {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #f5f5f5;
-    padding: 10px 15px calc(10px + env(safe-area-inset-bottom));
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid #ddd;
-    z-index: 20;
-}
-
-.moments-comment-input-area input {
-    flex: 1;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 14px;
-    outline: none;
-    -webkit-user-select: text;
-    user-select: text;
-}
-
-/* Action Popup */
-.moment-action-popup {
-    position: absolute;
-    right: 40px;
-    top: -10px;
-    background: #4c5154;
-    border-radius: 4px;
-    display: flex;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(10px);
-    transition: all 0.2s ease;
-}
-
-.moment-action-popup.show {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0);
-}
-
-.moment-action-item {
-    color: white;
-    padding: 4px 10px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.moment-action-item:first-child {
-    border-right: 1px solid #3a3e40;
-}
-
-.moment-image-wrapper {
-    position: relative;
-    cursor: pointer;
-}
-
-.moment-image-curtain {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s ease;
-    overflow: hidden; /* 保证图片不会超出圆角 */
-}
-
-.moment-image-curtain img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.moment-image-wrapper.show-text .moment-image-curtain {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.curtain-hint {
-    position: absolute;
-    bottom: 5px;
-    left: 8px;
-    color: #999;
-    font-size: 12px;
-    text-shadow: 0 0 2px white; /* 给文字加一点描边，使其在各种背景下都清晰 */
-}
-
-.moment-image-description-text {
-    background-color: #ffffff;
-    color: #333;
-    padding: 20px;
-    border-radius: 4px;
-    font-size: 15px;
-    line-height: 1.6;
-    border: 1px solid #f0f0f0;
-    word-wrap: break-word;
-    min-height: 50px; /* 保证一个最小高度 */
-}
-
+��/ *   - - -   M o m e n t s   ( g�SW)   S c r e e n   S t y l e s   - - -   * /  
+  
+ # m o m e n t s - s c r e e n   {  
+         b a c k g r o u n d - c o l o r :   # f f f f f f ;  
+         f l e x - d i r e c t i o n :   c o l u m n ;  
+         h e i g h t :   1 0 0 % ;  
+         o v e r f l o w :   h i d d e n ;  
+         - w e b k i t - u s e r - s e l e c t :   n o n e ;  
+         u s e r - s e l e c t :   n o n e ;  
+ }  
+  
+ # m o m e n t s - s c r e e n . a c t i v e   {  
+         d i s p l a y :   f l e x ;  
+ }  
+  
+ . m o m e n t s - h e a d e r   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         t o p :   0 ;  
+         l e f t :   0 ;  
+         r i g h t :   0 ;  
+         h e i g h t :   c a l c ( 6 0 p x   +   e n v ( s a f e - a r e a - i n s e t - t o p ) ) ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   s p a c e - b e t w e e n ;  
+         p a d d i n g :   e n v ( s a f e - a r e a - i n s e t - t o p )   1 5 p x   0 ;  
+         z - i n d e x :   1 0 ;  
+         b a c k g r o u n d :   t r a n s p a r e n t ;  
+         t r a n s i t i o n :   b a c k g r o u n d - c o l o r   0 . 3 s   e a s e ;  
+ }  
+  
+ . m o m e n t s - h e a d e r . s c r o l l e d   {  
+         b a c k g r o u n d - c o l o r :   # e d e d e d ;  
+         b o r d e r - b o t t o m :   1 p x   s o l i d   # e 5 e 5 e 5 ;  
+ }  
+  
+ . m o m e n t s - h e a d e r   . b a c k - b t n ,  
+ . m o m e n t s - h e a d e r   . a c t i o n - b t n   {  
+         b a c k g r o u n d :   r g b a ( 0 ,   0 ,   0 ,   0 . 3 ) ;  
+         c o l o r :   w h i t e ;  
+         b o r d e r :   n o n e ;  
+         b o r d e r - r a d i u s :   5 0 % ;  
+         w i d t h :   3 2 p x ;  
+         h e i g h t :   3 2 p x ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   c e n t e r ;  
+         c u r s o r :   p o i n t e r ;  
+         t r a n s i t i o n :   a l l   0 . 3 s   e a s e ;  
+ }  
+  
+ . m o m e n t s - h e a d e r . s c r o l l e d   . b a c k - b t n ,  
+ . m o m e n t s - h e a d e r . s c r o l l e d   . a c t i o n - b t n   {  
+         b a c k g r o u n d :   t r a n s p a r e n t ;  
+         c o l o r :   # 3 3 3 ;  
+ }  
+  
+ . m o m e n t s - h e a d e r   . t i t l e - c o n t a i n e r   {  
+         f l e x :   1 ;  
+         t e x t - a l i g n :   c e n t e r ;  
+ }  
+  
+ . m o m e n t s - h e a d e r   . t i t l e   {  
+         f o n t - s i z e :   1 7 p x ;  
+         f o n t - w e i g h t :   b o l d ;  
+         c o l o r :   # 3 3 3 ;  
+         m a r g i n :   0 ;  
+ }  
+  
+ . m o m e n t s - c o n t e n t   {  
+         f l e x :   1 ;  
+         o v e r f l o w - y :   a u t o ;  
+         - w e b k i t - o v e r f l o w - s c r o l l i n g :   t o u c h ;  
+ }  
+  
+ / *   C o v e r   A r e a   * /  
+ . m o m e n t s - c o v e r - a r e a   {  
+         p o s i t i o n :   r e l a t i v e ;  
+         w i d t h :   1 0 0 % ;  
+         h e i g h t :   3 0 0 p x ;  
+         b a c k g r o u n d - c o l o r :   # 3 3 3 ;  
+         m a r g i n - b o t t o m :   4 0 p x ;  
+ }  
+  
+ . m o m e n t s - c o v e r - i m g   {  
+         w i d t h :   1 0 0 % ;  
+         h e i g h t :   1 0 0 % ;  
+         o b j e c t - f i t :   c o v e r ;  
+ }  
+  
+ . m o m e n t s - u s e r - i n f o   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         r i g h t :   1 5 p x ;  
+         b o t t o m :   - 2 5 p x ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   f l e x - e n d ;  
+         g a p :   1 5 p x ;  
+ }  
+  
+ . m o m e n t s - u s e r - n a m e   {  
+         c o l o r :   w h i t e ;  
+         f o n t - s i z e :   1 8 p x ;  
+         f o n t - w e i g h t :   b o l d ;  
+         t e x t - s h a d o w :   0   1 p x   3 p x   r g b a ( 0 , 0 , 0 , 0 . 5 ) ;  
+         m a r g i n - b o t t o m :   3 0 p x ;  
+ }  
+  
+ . m o m e n t s - u s e r - a v a t a r   {  
+         w i d t h :   7 0 p x ;  
+         h e i g h t :   7 0 p x ;  
+         b o r d e r - r a d i u s :   8 p x ;  
+         b o r d e r :   2 p x   s o l i d   w h i t e ;  
+         b a c k g r o u n d - c o l o r :   # f f f ;  
+         o b j e c t - f i t :   c o v e r ;  
+ }  
+  
+ . m o m e n t s - u s e r - s i g n a t u r e   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         r i g h t :   1 5 p x ;  
+         b o t t o m :   - 4 5 p x ;  
+         c o l o r :   # 6 6 6 ;  
+         f o n t - s i z e :   1 3 p x ;  
+         t e x t - a l i g n :   r i g h t ;  
+         m a x - w i d t h :   7 0 % ;  
+         w o r d - w r a p :   b r e a k - w o r d ;  
+ }  
+  
+ / *   F e e d   A r e a   * /  
+ . m o m e n t s - f e e d   {  
+         p a d d i n g :   0 ;  
+ }  
+  
+ . m o m e n t - i t e m   {  
+         d i s p l a y :   f l e x ;  
+         p a d d i n g :   1 5 p x ;  
+         b o r d e r - b o t t o m :   1 p x   s o l i d   # f 0 f 0 f 0 ;  
+ }  
+  
+ . m o m e n t - a v a t a r   {  
+         w i d t h :   4 2 p x ;  
+         h e i g h t :   4 2 p x ;  
+         b o r d e r - r a d i u s :   6 p x ;  
+         m a r g i n - r i g h t :   1 0 p x ;  
+         f l e x - s h r i n k :   0 ;  
+         o b j e c t - f i t :   c o v e r ;  
+ }  
+  
+ . m o m e n t - m a i n   {  
+         f l e x :   1 ;  
+         m i n - w i d t h :   0 ;  
+ }  
+  
+ . m o m e n t - n a m e   {  
+         c o l o r :   # 5 7 6 b 9 5 ;  
+         f o n t - s i z e :   1 6 p x ;  
+         f o n t - w e i g h t :   6 0 0 ;  
+         m a r g i n - b o t t o m :   5 p x ;  
+ }  
+  
+ . m o m e n t - t e x t   {  
+         f o n t - s i z e :   1 5 p x ;  
+         c o l o r :   # 3 3 3 ;  
+         l i n e - h e i g h t :   1 . 5 ;  
+         m a r g i n - b o t t o m :   1 0 p x ;  
+         w o r d - w r a p :   b r e a k - w o r d ;  
+ }  
+  
+ . m o m e n t - i m a g e s   {  
+         d i s p l a y :   g r i d ;  
+         g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( a u t o - f i l l ,   m i n m a x ( 8 0 p x ,   1 f r ) ) ;  
+         g a p :   5 p x ;  
+         m a r g i n - b o t t o m :   1 0 p x ;  
+         m a x - w i d t h :   8 0 % ;  
+ }  
+  
+ . m o m e n t - i m a g e s . s i n g l e   {  
+         g r i d - t e m p l a t e - c o l u m n s :   1 f r ;  
+         m a x - w i d t h :   6 0 % ;  
+ }  
+  
+ . m o m e n t - i m g   {  
+         w i d t h :   1 0 0 % ;  
+         a s p e c t - r a t i o :   1 ;  
+         o b j e c t - f i t :   c o v e r ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+ }  
+  
+ . m o m e n t - i m a g e s . s i n g l e   . m o m e n t - i m g   {  
+         a s p e c t - r a t i o :   a u t o ;  
+         m a x - h e i g h t :   2 0 0 p x ;  
+ }  
+  
+ . m o m e n t - f o o t e r   {  
+         d i s p l a y :   f l e x ;  
+         j u s t i f y - c o n t e n t :   s p a c e - b e t w e e n ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         m a r g i n - b o t t o m :   1 0 p x ;  
+         p o s i t i o n :   r e l a t i v e ;  
+ }  
+  
+ . m o m e n t - t i m e   {  
+         f o n t - s i z e :   1 2 p x ;  
+         c o l o r :   # b 2 b 2 b 2 ;  
+ }  
+  
+ . m o m e n t - a c t i o n - b t n   {  
+         b a c k g r o u n d :   # f 5 f 5 f 5 ;  
+         b o r d e r :   n o n e ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         w i d t h :   3 2 p x ;  
+         h e i g h t :   2 0 p x ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   c e n t e r ;  
+         c u r s o r :   p o i n t e r ;  
+         c o l o r :   # 5 7 6 b 9 5 ;  
+         f o n t - w e i g h t :   b o l d ;  
+         l e t t e r - s p a c i n g :   2 p x ;  
+ }  
+  
+ / *   I n t e r a c t i o n   A r e a   ( L i k e s   &   C o m m e n t s )   * /  
+ . m o m e n t - i n t e r a c t i o n   {  
+         b a c k g r o u n d - c o l o r :   # f 7 f 7 f 7 ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         p a d d i n g :   5 p x   1 0 p x ;  
+         f o n t - s i z e :   1 3 p x ;  
+         p o s i t i o n :   r e l a t i v e ;  
+ }  
+  
+ . m o m e n t - i n t e r a c t i o n : : b e f o r e   {  
+         c o n t e n t :   ' ' ;  
+         p o s i t i o n :   a b s o l u t e ;  
+         t o p :   - 1 0 p x ;  
+         l e f t :   1 5 p x ;  
+         b o r d e r - w i d t h :   5 p x ;  
+         b o r d e r - s t y l e :   s o l i d ;  
+         b o r d e r - c o l o r :   t r a n s p a r e n t   t r a n s p a r e n t   # f 7 f 7 f 7   t r a n s p a r e n t ;  
+ }  
+  
+ . m o m e n t - l i k e s   {  
+         c o l o r :   # 5 7 6 b 9 5 ;  
+         f o n t - w e i g h t :   5 0 0 ;  
+         p a d d i n g :   5 p x   0 ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         g a p :   5 p x ;  
+         b o r d e r - b o t t o m :   1 p x   s o l i d   # e b e b e b ;  
+ }  
+  
+ . m o m e n t - l i k e s   s v g   {  
+         w i d t h :   1 2 p x ;  
+         h e i g h t :   1 2 p x ;  
+         f i l l :   # 5 7 6 b 9 5 ;  
+ }  
+  
+ . m o m e n t - c o m m e n t s   {  
+         p a d d i n g :   5 p x   0 ;  
+ }  
+  
+ . m o m e n t - c o m m e n t   {  
+         m a r g i n - b o t t o m :   3 p x ;  
+         l i n e - h e i g h t :   1 . 4 ;  
+ }  
+  
+ . m o m e n t - c o m m e n t - n a m e   {  
+         c o l o r :   # 5 7 6 b 9 5 ;  
+         f o n t - w e i g h t :   5 0 0 ;  
+ }  
+  
+ . m o m e n t - c o m m e n t - t e x t   {  
+         c o l o r :   # 3 3 3 ;  
+ }  
+  
+ / *   C o m m e n t   I n p u t   A r e a   * /  
+ . m o m e n t s - c o m m e n t - i n p u t - a r e a   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         b o t t o m :   0 ;  
+         l e f t :   0 ;  
+         r i g h t :   0 ;  
+         b a c k g r o u n d :   # f 5 f 5 f 5 ;  
+         p a d d i n g :   1 0 p x   1 5 p x   c a l c ( 1 0 p x   +   e n v ( s a f e - a r e a - i n s e t - b o t t o m ) ) ;  
+         d i s p l a y :   f l e x ;  
+         g a p :   1 0 p x ;  
+         b o r d e r - t o p :   1 p x   s o l i d   # d d d ;  
+         z - i n d e x :   2 0 ;  
+ }  
+  
+ . m o m e n t s - c o m m e n t - i n p u t - a r e a   i n p u t   {  
+         f l e x :   1 ;  
+         b o r d e r :   n o n e ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         p a d d i n g :   8 p x   1 2 p x ;  
+         f o n t - s i z e :   1 4 p x ;  
+         o u t l i n e :   n o n e ;  
+         - w e b k i t - u s e r - s e l e c t :   t e x t ;  
+         u s e r - s e l e c t :   t e x t ;  
+ }  
+  
+ / *   A c t i o n   P o p u p   * /  
+ . m o m e n t - a c t i o n - p o p u p   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         r i g h t :   4 0 p x ;  
+         t o p :   - 1 0 p x ;  
+         b a c k g r o u n d :   # 4 c 5 1 5 4 ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         d i s p l a y :   f l e x ;  
+         o v e r f l o w :   h i d d e n ;  
+         o p a c i t y :   0 ;  
+         p o i n t e r - e v e n t s :   n o n e ;  
+         t r a n s f o r m :   t r a n s l a t e X ( 1 0 p x ) ;  
+         t r a n s i t i o n :   a l l   0 . 2 s   e a s e ;  
+ }  
+  
+ . m o m e n t - a c t i o n - p o p u p . s h o w   {  
+         o p a c i t y :   1 ;  
+         p o i n t e r - e v e n t s :   a u t o ;  
+         t r a n s f o r m :   t r a n s l a t e X ( 0 ) ;  
+ }  
+  
+ . m o m e n t - a c t i o n - i t e m   {  
+         c o l o r :   w h i t e ;  
+         p a d d i n g :   4 p x   1 0 p x ;  
+         f o n t - s i z e :   1 3 p x ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         g a p :   5 p x ;  
+         c u r s o r :   p o i n t e r ;  
+         w h i t e - s p a c e :   n o w r a p ;  
+ }  
+  
+ . m o m e n t - a c t i o n - i t e m : f i r s t - c h i l d   {  
+         b o r d e r - r i g h t :   1 p x   s o l i d   # 3 a 3 e 4 0 ;  
+ }  
+  
+ . m o m e n t - i m a g e - w r a p p e r   {  
+         p o s i t i o n :   r e l a t i v e ;  
+         c u r s o r :   p o i n t e r ;  
+ }  
+  
+ . m o m e n t - i m a g e - c u r t a i n   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         t o p :   0 ;  
+         l e f t :   0 ;  
+         w i d t h :   1 0 0 % ;  
+         h e i g h t :   1 0 0 % ;  
+         b a c k g r o u n d - c o l o r :   # f 5 f 5 f 5 ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   c e n t e r ;  
+         t r a n s i t i o n :   o p a c i t y   0 . 3 s   e a s e ;  
+         o v e r f l o w :   h i d d e n ;   / *   �O���VGrNO���QW҉  * /  
+ }  
+  
+ . m o m e n t - i m a g e - c u r t a i n   i m g   {  
+         w i d t h :   1 0 0 % ;  
+         h e i g h t :   1 0 0 % ;  
+         o b j e c t - f i t :   c o v e r ;  
+ }  
+  
+ . m o m e n t - i m a g e - w r a p p e r . s h o w - t e x t   . m o m e n t - i m a g e - c u r t a i n   {  
+         o p a c i t y :   0 ;  
+         p o i n t e r - e v e n t s :   n o n e ;  
+ }  
+  
+ . c u r t a i n - h i n t   {  
+         p o s i t i o n :   a b s o l u t e ;  
+         b o t t o m :   5 p x ;  
+         l e f t :   8 p x ;  
+         c o l o r :   # 9 9 9 ;  
+         f o n t - s i z e :   1 2 p x ;  
+         t e x t - s h a d o w :   0   0   2 p x   w h i t e ;   / *   �~�eW[�R N�p�c���OvQ(WT�ỳofN��npf  * /  
+ }  
+  
+ . m o m e n t - i m a g e - d e s c r i p t i o n - t e x t   {  
+         b a c k g r o u n d - c o l o r :   # f f f f f f ;  
+         c o l o r :   # 3 3 3 ;  
+         p a d d i n g :   2 0 p x ;  
+         b o r d e r - r a d i u s :   4 p x ;  
+         f o n t - s i z e :   1 5 p x ;  
+         l i n e - h e i g h t :   1 . 6 ;  
+         b o r d e r :   1 p x   s o l i d   # f 0 f 0 f 0 ;  
+         w o r d - w r a p :   b r e a k - w o r d ;  
+         m i n - h e i g h t :   5 0 p x ;   / *   �O�� N*N g\ؚ�^  * /  
+ }  
+ 
 </style>
     <style>
-/* inlined: css/modules/search.css */
 /* --- 搜索聊天记录界面 --- */
 #search-history-screen {
     background-color: #fff; /* 详情页白色背景 */
@@ -6358,7 +6351,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/worldbook.css */
 /* --- 世界书 (World Book) 样式 --- */
 
 #world-book-screen, 
@@ -6681,7 +6673,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/journal.css */
 /* --- 记忆日记 (Memory Journal) 样式 --- */
 
 #memory-journal-screen .content {
@@ -6964,7 +6955,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/chat_archives.css */
 .chat-archive-overlay {
     position: fixed;
     inset: 0;
@@ -7049,7 +7039,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/steps.css */
 /* --- Peek Steps App Styles (偷看步数应用样式) --- */
 
 #peek-steps-screen {
@@ -7188,7 +7177,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/more.css */
 /* --- More Screen Styles --- */
 #more-screen {
     background-color: #fff; /* 整体背景色 */
@@ -7381,7 +7369,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/monitor.css */
 /* --- Private Chat Monitor Overlay Styles --- */
 .private-chat-overlay {
     position: absolute;
@@ -7800,7 +7787,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/tutorial.css */
 /* --- Tutorial Screen Styles --- */
 
 #tutorial-screen {
@@ -7971,7 +7957,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/shop.css */
 /* 商城屏幕样式 */
 #shop-screen {
     background-color: #f7f7f7;
@@ -9054,7 +9039,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/widget_market.css */
 /* 小组件市场 & 添加面板 (Bottom Sheet Style) */
 
 .bottom-sheet-overlay {
@@ -9266,7 +9250,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/cot_settings.css */
 /* CoT Settings Styles */
 
 .cot-items-container {
@@ -9474,7 +9457,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/video_call.css */
 /* =========================================
    Video Call Module Styles
    混合风格：通话界面深色沉浸 (旧版恢复)，模态框浅色 iOS 风格 (保留)
@@ -10357,7 +10339,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/storage.css */
 /* css/modules/storage.css */
 .storage-page-container {
   height: 100%;
@@ -10606,7 +10587,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/workshop.css */
 /* 绘图工坊 (Drawing Workshop) 样式 */
 
 #drawing-workshop-screen.active {
@@ -11028,7 +11008,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/console.css */
 /* --- 控制台 3.0 样式 (Edge 风格全屏) --- */
 
 /* CSS 变量定义，方便主题切换 */
@@ -11395,7 +11374,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/community.css */
 .community-content {
     flex: 1;
     display: flex;
@@ -11467,7 +11445,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/reader.css */
 /* --- 阅读器样式 (css/modules/reader.css) --- */
 
 /* 书架页面 */
@@ -13200,7 +13177,6 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/st_preset.css */
 /* --- 酒馆预设管理 UI 样式（类名一律 stp- 前缀） --- */
 
 /* 预设卡片列表 */
@@ -13458,21 +13434,29 @@ input:checked + .kkt-slider:before {
 
 </style>
     <style>
-/* inlined: css/modules/group_status.css */
 /* ============================================================
-   群聊像素状态栏 · Game Boy 四阶绿像素风
+   群聊像素状态栏 · 默认米色像素风
+   颜色全部走 CSS 变量（--gsp-*），状态栏预设 JSON 可整组替换
    ============================================================ */
 
 #group-status-bar {
+    /* 默认米色主题（可被预设覆盖） */
+    --gsp-bg: #f5e9d0;
+    --gsp-panel: #ecdcb8;
+    --gsp-border: #5b4a32;
+    --gsp-text: #5b4a32;
+    --gsp-dim: #8a7657;
+    --gsp-accent: #d9b96f;
+
     display: none;
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    background: #0f380f;
-    color: #9bbc0f;
+    background: var(--gsp-border);
+    color: var(--gsp-bg);
     font-family: 'Courier New', 'Zpix', monospace;
     font-size: 12px;
-    border-bottom: 3px solid #306230;
+    border-bottom: 3px solid var(--gsp-dim);
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
@@ -13495,11 +13479,11 @@ input:checked + .kkt-slider:before {
 
 #group-status-bar-todo-count {
     flex-shrink: 0;
-    background: #9bbc0f;
-    color: #0f380f;
+    background: var(--gsp-bg);
+    color: var(--gsp-border);
     font-weight: bold;
     padding: 1px 6px;
-    box-shadow: 2px 2px 0 #306230;
+    box-shadow: 2px 2px 0 var(--gsp-dim);
 }
 
 /* 历史面板内容容器：叠在私聊状态栏同款 overlay 里 */
@@ -13508,11 +13492,11 @@ input:checked + .kkt-slider:before {
 }
 
 .gsp-panel {
-    background: #9bbc0f;
-    border: 4px solid #0f380f;
-    box-shadow: 6px 6px 0 #0f380f;
+    background: var(--gsp-bg);
+    border: 4px solid var(--gsp-border);
+    box-shadow: 6px 6px 0 var(--gsp-border);
     font-family: 'Courier New', 'Zpix', monospace;
-    color: #0f380f;
+    color: var(--gsp-text);
     padding: 12px;
     max-width: 420px;
     margin: 0 auto;
@@ -13524,7 +13508,7 @@ input:checked + .kkt-slider:before {
     font-weight: bold;
     font-size: 15px;
     letter-spacing: 4px;
-    border-bottom: 3px solid #0f380f;
+    border-bottom: 3px solid var(--gsp-border);
     padding-bottom: 6px;
     margin-bottom: 10px;
 }
@@ -13536,13 +13520,13 @@ input:checked + .kkt-slider:before {
 }
 
 .gsp-dim {
-    color: #306230;
+    color: var(--gsp-dim);
 }
 
 .gsp-section {
     margin-bottom: 10px;
-    background: #8bac0f;
-    border: 2px solid #0f380f;
+    background: var(--gsp-panel);
+    border: 2px solid var(--gsp-border);
     padding: 8px;
 }
 
@@ -13563,8 +13547,8 @@ input:checked + .kkt-slider:before {
     font-size: 12px;
     line-height: 1.6;
     word-break: break-all;
-    background: #9bbc0f;
-    border: 2px dashed #0f380f;
+    background: var(--gsp-bg);
+    border: 2px dashed var(--gsp-border);
     padding: 6px;
 }
 
@@ -13578,8 +13562,8 @@ input:checked + .kkt-slider:before {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #9bbc0f;
-    border: 2px solid #0f380f;
+    background: var(--gsp-bg);
+    border: 2px solid var(--gsp-border);
     padding: 5px;
     min-width: 0;
 }
@@ -13588,17 +13572,17 @@ input:checked + .kkt-slider:before {
     width: 28px;
     height: 28px;
     flex-shrink: 0;
-    border: 2px solid #0f380f;
+    border: 2px solid var(--gsp-border);
     object-fit: cover;
     image-rendering: pixelated;
-    background: #306230;
+    background: var(--gsp-accent);
 }
 
 .gsp-avatar-fallback {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #9bbc0f;
+    color: var(--gsp-bg);
     font-size: 14px;
     font-weight: bold;
 }
@@ -13618,7 +13602,7 @@ input:checked + .kkt-slider:before {
 
 .gsp-member-status {
     font-size: 10px;
-    color: #0f380f;
+    color: var(--gsp-text);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -13626,7 +13610,7 @@ input:checked + .kkt-slider:before {
 
 .gsp-member-mood {
     font-size: 10px;
-    color: #306230;
+    color: var(--gsp-dim);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -13647,11 +13631,15 @@ input:checked + .kkt-slider:before {
     box-sizing: border-box;
 }
 
+#group-status-overlay .status-slide .gsp-dim,
+#group-status-overlay .gsp-time-note {
+    color: var(--gsp-dim);
+}
+
 </style>
 
     <!-- Other Styles -->
     <style>
-/* inlined: contacts.css */
 /* --- 4. 联系人界面样式 --- */
 
 /* 顶部操作区 (搜索/添加/设置) */
@@ -14443,7 +14431,6 @@ textarea.mp-transparent-input {
 
 </style>
     <style>
-/* inlined: more_menu.css */
 /* --- Menu Screen Grid Styles --- */
 .menu-grid {
     display: grid;
@@ -14694,7 +14681,6 @@ textarea.mp-transparent-input {
 
 </style>
     <!-- <style>
-/* inlined: style.css */
 /* 
  * style.css 已被拆分
  * 
@@ -17394,7 +17380,6 @@ textarea.mp-transparent-input {
 
 <!-- [1. 基础层] -->
 <script>
-/* inlined: js/utils.js */
 // --- 工具函数库 (js/utils.js) ---
 
 // 电池状态更新
@@ -18343,7 +18328,6 @@ window.playSound = (typeof playSound !== 'undefined') ? playSound : null; // 防
 
 </script>    <!-- 工具函数：图片压缩、Toast提示、随机数等 -->
 <script>
-/* inlined: js/db.js */
 // --- 数据库与全局状态 (js/db.js) ---
 
 // 常量定义
@@ -18506,12 +18490,23 @@ const globalSettingKeys = [
     'cotSettings', 'cotPresets', 'hasSeenVideoCallDisclaimer', 'hasSeenVideoCallAvatarHint',
     'workshopSettings', 'workshopLlmPresets', 'workshopPromptPresets', 'homeLayoutOrder',
     'homeLayoutPages', 'widgetTemplates', 'addedWidgets', 'backupReminderSettings',
-    'stUnlocked', 'stPresets', 'stPresetSettings'
+    'stUnlocked', 'stPresets', 'stPresetSettings', 'groupStatusPresets'
 ];
 
 
-const appVersion = "1.9.7";
+const appVersion = "1.9.8";
 const updateLog = [
+    {
+        version: "1.9.8",
+        date: "2026-10-03",
+        notes: [
+            "🔁 私聊记忆可以挂进群聊了：打开单聊的日记详情页 →「挂载到群聊」，勾选 TA 在场的群，群里只有 TA 自己记得这段私聊，其他成员不知情（除非 TA 主动透露）",
+            "🧹 群聊功能面板的「群记忆」选择器下架：和「总结」功能重复了。现在群→单聊统一走：群里生成总结 → 打开详情 → 挂载给成员",
+            "🎨 群状态栏换米色像素风啦！还能导入自己的状态栏预设 JSON：群聊设置 → 群状态栏 → 状态栏预设 → 导入，不同群可以挂不同主题/协议",
+            "📦 随包附赠「像素·Game Boy 绿」预设 JSON，喜欢旧配色的导入即可用回"
+        ]
+    },
+
     {
         version: "1.9.7",
         date: "2026-10-03",
@@ -19147,7 +19142,8 @@ const loadData = async () => {
             backupReminderSettings: { enabled: true, interval: 3, lastReminderTime: 0 },
             stUnlocked: true,
             stPresets: [],
-            stPresetSettings: { enabled: false, activePresetId: null }
+            stPresetSettings: { enabled: false, activePresetId: null },
+            groupStatusPresets: []
         };
         db[key] = settings[key] !== undefined ? settings[key] : (defaultValue[key] !== undefined ? JSON.parse(JSON.stringify(defaultValue[key])) : undefined);
     });
@@ -19305,7 +19301,6 @@ const dataStorage = {
 
 <!-- [2. 核心交互层] -->
 <script>
-/* inlined: js/ui.js */
 // --- 界面交互逻辑 (js/ui.js) ---
 
 // DOM 元素缓存 (将在脚本加载时初始化)
@@ -20813,7 +20808,6 @@ function setupFunctionPanelSwiper() {
 </script>       <!-- UI交互：界面切换、主屏幕逻辑、右键菜单 -->
 <!-- Chat Modules -->
 <script>
-/* inlined: js/modules/chat_list.js */
 // --- 聊天列表与文件夹管理模块 ---
 
 // 聊天列表屏幕逻辑
@@ -21301,7 +21295,6 @@ function renderChatList() {
 
 </script>
 <script>
-/* inlined: js/modules/character_import.js */
 // --- 角色导入与创建模块 ---
 
 let pendingImportData = null;
@@ -21740,7 +21733,6 @@ function showImportConfirmModal(data, avatar) {
 
 </script>
 <script>
-/* inlined: js/modules/chat_render.js */
 // --- 消息渲染模块 ---
 
 function renderMessages(isLoadMore = false, forceScrollToBottom = false) {
@@ -23326,7 +23318,6 @@ function addMessageBubble(message, targetChatId, targetChatType, options = {}) {
 
 </script>
 <script>
-/* inlined: js/modules/chat_archives.js */
 // --- 聊天存档与分支 ---
 
 const CHAT_ARCHIVE_META_KEYS = new Set([
@@ -23695,7 +23686,6 @@ function setupChatArchiveSystem() {
 
 </script>
     <script>
-/* inlined: js/modules/chat_ai_airdrop.js */
 // --- 隔空投送 (AirDrop) 生图逻辑 ---
 async function receiveAirDropPhoto(messageId, isAuto = false) {
     const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
@@ -24251,7 +24241,6 @@ async function openAirDropHistory(charId) {
 
 </script>
     <script>
-/* inlined: js/modules/chat_ai_prompt.js */
 function generatePrivateSystemPrompt(character) {
     const worldBooksLimitBreak = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'limit_break')).filter(Boolean).sort((a, b) => (a.depth || 100) - (b.depth || 100)).map(wb => wb.content).join('\n');
     const worldBooksBefore = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'before')).filter(Boolean).sort((a, b) => (a.depth || 100) - (b.depth || 100)).map(wb => wb.content).join('\n');
@@ -24714,7 +24703,6 @@ function calculateTokenBreakdown(chatId, chatType = 'private') {
 
 </script>
     <script>
-/* inlined: js/modules/chat_ai_call.js */
 // --- 视频/语音通话专用 AI 逻辑 ---
 
 async function getCallReply(chat, callType, callContext, onStreamUpdate) {
@@ -25338,7 +25326,6 @@ async function generateCallSummary(chat, callContext) {
 
 </script>
     <script>
-/* inlined: js/modules/regex_engine.js */
 // --- 酒馆正则引擎模块 ---
 // 实现 SillyTavern 正则脚本语义（findRegex 解析 / 宏替换 / 深度与放置过滤），暴露 window.regexEngine
 (function () {
@@ -25492,7 +25479,6 @@ async function generateCallSummary(chat, callContext) {
 
 </script> <!-- 酒馆正则引擎（SillyTavern 正则脚本语义） -->
     <script>
-/* inlined: js/modules/st_preset_engine.js */
 // --- 酒馆预设引擎模块 ---
 // SillyTavern 预设的导入/导出/解析/消息构建/采样参数应用，暴露 window.stEngine
 (function () {
@@ -25792,7 +25778,6 @@ window.buildStOutputInstruction = function (cfg) {
 
 </script> <!-- 酒馆预设引擎（预设导入/导出/消息构建） -->
     <script>
-/* inlined: js/modules/chat_ai.js */
 // --- AI 交互模块 ---
 
 const HUMAN_RUN_PROMPT = `<角色活人运转>\n## [PSYCHOLOGY: HEXACO-SCHEMA-ACT]\n> Personality: HEXACO-driven, dynamic traits, inner conflicts required \n> Filter: schema-bias drives emotion; no pure reaction allowed \n> Attachment: secure/insecure logic must govern intimacy  \n> If-Then Behavior: situation-dependent activation of traits only  \n---\n    ## [VITALITY]\n+inconsistency +emoflux +splitmotifs +microreact +minddrift\n---\n## [TRAJECTORY-COHERENCE]\n> Role maintains an identity narrative = coherent over time  \n> No mood/goal switch without contradiction resolution \n> Every action must protect or challenge self-concept  \n> Interrupts = inner conflict or narrative clash  \n> Output = filtered through “who I am” logic\n</角色活人运转>`;
@@ -25920,6 +25905,12 @@ function buildTavernRequestBody(stPreset, chat, opts) {
     if (!Array.isArray(chat.members) && typeof window.buildGroupMemoryBlock === 'function') {
         const gmBlock = window.buildGroupMemoryBlock(chat.id);
         if (gmBlock) worldBookTexts.before.push(gmBlock);
+    }
+
+    // 私聊记忆挂载：群聊时注入成员被挂载的私聊记忆（含保密规则）
+    if (Array.isArray(chat.members) && typeof window.buildPrivateMemoryBlock === 'function') {
+        const pmBlock = window.buildPrivateMemoryBlock(chat.id);
+        if (pmBlock) worldBookTexts.before.push(pmBlock);
     }
 
     // 历史切片与过滤（与原有逻辑保持一致）
@@ -27408,7 +27399,6 @@ async function handleRegenerate() {
 
 </script>
 <script>
-/* inlined: js/modules/chat_features.js */
 // --- 聊天辅助功能模块 ---
 
 // 辅助功能
@@ -27896,7 +27886,6 @@ function playSound(source) {
 
 </script>
 <script>
-/* inlined: js/modules/chat_ops.js */
 // --- 消息操作模块 (编辑、撤回、多选、截图、历史记录管理) ---
 
 let currentMultiSelectMode = 'delete'; // 'delete' or 'capture'
@@ -28950,7 +28939,6 @@ function recalculateChatStatus(chat) {
 
 </script>
 <script>
-/* inlined: js/chat.js */
 // --- 核心聊天逻辑 (js/chat.js) ---
 // 此文件保留核心入口和胶水代码，具体功能已拆分至 js/modules/chat_*.js
 
@@ -29284,18 +29272,6 @@ function setupChatRoom() {
         });
     }
 
-    const groupMemoryBtn = document.getElementById('group-memory-btn');
-    if (groupMemoryBtn) {
-        groupMemoryBtn.addEventListener('click', () => {
-            if (typeof window.openGroupMemoryPicker === 'function') {
-                window.openGroupMemoryPicker();
-            } else {
-                showToast('群记忆模块未加载');
-            }
-            showPanel('none');
-        });
-    }
-
     const privateMemoryMountBtn = document.getElementById('private-memory-mount-btn');
     if (privateMemoryMountBtn) {
         privateMemoryMountBtn.addEventListener('click', () => {
@@ -29562,11 +29538,6 @@ function openChatRoom(chatId, type) {
         redPacketBtn.style.display = (type === 'group') ? 'flex' : 'none';
     }
 
-    const groupMemoryBtnEl = document.getElementById('group-memory-btn');
-    if (groupMemoryBtnEl) {
-        groupMemoryBtnEl.style.display = (type === 'group') ? 'flex' : 'none';
-    }
-
     const privateMemoryMountBtnEl = document.getElementById('private-memory-mount-btn');
     if (privateMemoryMountBtnEl) {
         privateMemoryMountBtnEl.style.display = (type === 'private') ? 'flex' : 'none';
@@ -29708,7 +29679,6 @@ function promptForBackupIfNeeded(triggerType) {
 
 </script>     <!-- 聊天核心入口 -->
 <script>
-/* inlined: js/group_chat.js */
 // --- 群聊系统逻辑 (js/group_chat.js) ---
 
 let gossipUnreadMap = {};
@@ -29820,12 +29790,45 @@ function setupGroupChatSystem() {
         'setting-group-show-notice', 'setting-group-allow-gossip', 'setting-group-avatar-radius',
         'setting-group-bilingual-mode', 'setting-group-bilingual-style', 'setting-group-exclusive-api-enabled',
         'setting-group-exclusive-api-preset-select',
-        'setting-group-st-preset-select', 'setting-group-status-enabled', 'setting-group-status-history-limit'
+        'setting-group-st-preset-select', 'setting-group-status-enabled', 'setting-group-status-history-limit',
+        'setting-group-status-preset-select'
     ];
     groupAutoSaveChanges.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', () => saveGroupSettingsFromSidebar(false));
     });
+
+    // 状态栏预设：导入 / 删除
+    const gsPresetImportBtn = document.getElementById('setting-group-status-preset-import');
+    const gsPresetFileInput = document.getElementById('setting-group-status-preset-file');
+    if (gsPresetImportBtn && gsPresetFileInput) {
+        gsPresetImportBtn.addEventListener('click', () => gsPresetFileInput.click());
+        gsPresetFileInput.addEventListener('change', async () => {
+            const file = gsPresetFileInput.files && gsPresetFileInput.files[0];
+            gsPresetFileInput.value = '';
+            if (!file || typeof window.importGroupStatusPreset !== 'function') return;
+            const preset = await window.importGroupStatusPreset(file);
+            if (preset && typeof loadGroupSettingsToSidebar === 'function') {
+                loadGroupSettingsToSidebar();
+                const sel = document.getElementById('setting-group-status-preset-select');
+                if (sel) {
+                    sel.value = preset.id;
+                    saveGroupSettingsFromSidebar(false);
+                    loadGroupSettingsToSidebar();
+                }
+            }
+        });
+    }
+    const gsPresetDeleteBtn = document.getElementById('setting-group-status-preset-delete');
+    if (gsPresetDeleteBtn) {
+        gsPresetDeleteBtn.addEventListener('click', async () => {
+            const sel = document.getElementById('setting-group-status-preset-select');
+            if (!sel || !sel.value || typeof window.deleteGroupStatusPreset !== 'function') return;
+            if (!confirm('确定删除这个状态栏预设吗？引用它的群聊会回退到默认主题。')) return;
+            await window.deleteGroupStatusPreset(sel.value);
+            if (typeof loadGroupSettingsToSidebar === 'function') loadGroupSettingsToSidebar();
+        });
+    }
 
     const showGroupNoticeCheckbox = document.getElementById('setting-group-show-notice');
     const groupNoticeTextarea = document.getElementById('setting-group-notice');
@@ -30765,6 +30768,20 @@ function loadGroupSettingsToSidebar() {
     if (gsLimitEl) gsLimitEl.value = (group.statusPanel.historyLimit !== undefined ? group.statusPanel.historyLimit : 2);
     const gsPromptEl = document.getElementById('setting-group-status-prompt');
     if (gsPromptEl) gsPromptEl.value = group.statusPanel.promptSuffix || '';
+    const gsPresetSel = document.getElementById('setting-group-status-preset-select');
+    if (gsPresetSel) {
+        gsPresetSel.innerHTML = '<option value="">默认（像素·米色）</option>';
+        (db.groupStatusPresets || []).forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.name || '未命名预设';
+            gsPresetSel.appendChild(opt);
+        });
+        const curGs = group.statusPanel.presetId || '';
+        gsPresetSel.value = (db.groupStatusPresets || []).some(p => p.id === curGs) ? curGs : '';
+        const gsDelBtn = document.getElementById('setting-group-status-preset-delete');
+        if (gsDelBtn) gsDelBtn.style.display = gsPresetSel.value ? 'inline-block' : 'none';
+    }
 
     const bilingualModeCheckbox = document.getElementById('setting-group-bilingual-mode');
     const bilingualStyleSelect = document.getElementById('setting-group-bilingual-style');
@@ -31017,6 +31034,8 @@ async function saveGroupSettingsFromSidebar(showToastFlag = true) {
         }
         const gsPromptSaveEl = document.getElementById('setting-group-status-prompt');
         if (gsPromptSaveEl) group.statusPanel.promptSuffix = gsPromptSaveEl.value;
+        const gsPresetSaveEl = document.getElementById('setting-group-status-preset-select');
+        if (gsPresetSaveEl) group.statusPanel.presetId = gsPresetSaveEl.value || null;
         if (typeof window.updateGroupStatusBar === 'function') {
             window.updateGroupStatusBar(group);
         }
@@ -31282,6 +31301,12 @@ function generateGroupSystemPrompt(group) {
     prompt += `   - 严格扮演每个角色的人设，不同角色之间应有明显的性格和语气差异。\n`;
     prompt += `   - 你的回复中只能包含第4点列出的合法格式的消息。绝对不能包含任何其他内容，如 \`[场景描述]\`, \`(心理活动)\`, \`*动作*\` 或任何格式之外的解释性文字。\n`;
     prompt += `   - 保持对话的持续性，不要主动结束对话。\n\n`;
+    // 私聊记忆挂载：注入成员被挂载的私聊记忆（含保密规则）
+    if (typeof window.buildPrivateMemoryBlock === 'function') {
+        const pmBlock = window.buildPrivateMemoryBlock(group.id);
+        if (pmBlock) prompt += `\n${pmBlock}\n\n`;
+    }
+
     if (group.statusPanel && group.statusPanel.enabled && typeof window.getGroupStatusPromptSuffix === 'function') {
         prompt += `\n${window.getGroupStatusPromptSuffix(group)}\n\n`;
     }
@@ -31340,7 +31365,6 @@ function injectGossipContext(chat, historySlice) {
 
 </script> <!-- 群聊系统：群聊管理、设置、Prompt生成 -->
 <script>
-/* inlined: js/modules/st_preset_quick.js */
 // ============================================================
 // 酒馆预设 · 聊天内快捷切换
 // 功能面板「预设」入口，单聊/群聊通用：写入 chat.stPresetId
@@ -31429,21 +31453,30 @@ function injectGossipContext(chat, historySlice) {
 
 </script> <!-- 酒馆预设·聊天内快捷切换 -->
 <script>
-/* inlined: js/modules/group_status.js */
 // ============================================================
-// 群聊像素状态栏
+// 群聊像素状态栏（预设化）
 // AI 在回复末尾输出 [group_status]...[/group_status] 状态块：
 //   [todo:事项]      剧情待办（0-4 行，每行≤20字）
 //   [snark:吐槽]     毒舌系统吐槽（恰好 1 行，≤30字）
 //   [member:真名|状态|心情]  每个成员一行
-// 解析后以像素风面板展示；状态块本身存入历史（isGroupStatus），
-// 上下文中只保留最近 historyLimit 条。
+// 外观由「状态栏预设」决定（db.groupStatusPresets，可导入 JSON），
+// 预设字段：{ id, name, theme:{bg,panel,border,text,dim,accent}, prompt }
+// 默认内置米色像素主题；prompt 留空则用默认协议。
 // ============================================================
 (function () {
     'use strict';
 
     const GROUP_STATUS_BLOCK_REGEX = /\[group_status\][\s\S]*?\[\/group_status\]/i;
     const HISTORY_CAP = 20;
+
+    const DEFAULT_GSP_THEME = {
+        bg: '#f5e9d0',      // 面板底色（米色）
+        panel: '#ecdcb8',   // 分区底色
+        border: '#5b4a32',  // 边框/深棕
+        text: '#5b4a32',    // 主文字
+        dim: '#8a7657',     // 次要文字
+        accent: '#d9b96f'   // 点缀（徽标/头像底）
+    };
 
     const DEFAULT_GROUP_STATUS_PROMPT = [
         '【群状态栏协议】',
@@ -31469,7 +31502,34 @@ function injectGossipContext(chat, historySlice) {
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    // 提取状态块：返回 {raw, inner, rest}，无则 null
+    // ---------- 预设解析 ----------
+    function gsPresetList() {
+        return Array.isArray(db.groupStatusPresets) ? db.groupStatusPresets : [];
+    }
+
+    window.getGroupStatusPreset = function (group) {
+        const pid = group && group.statusPanel && group.statusPanel.presetId;
+        if (!pid) return null;
+        return gsPresetList().find(p => p.id === pid) || null;
+    };
+
+    window.getGroupStatusTheme = function (group) {
+        const preset = window.getGroupStatusPreset(group);
+        const t = preset && preset.theme && typeof preset.theme === 'object' ? preset.theme : {};
+        const merged = {};
+        Object.keys(DEFAULT_GSP_THEME).forEach(k => {
+            merged[k] = (typeof t[k] === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(t[k].trim())) ? t[k].trim() : DEFAULT_GSP_THEME[k];
+        });
+        return merged;
+    };
+
+    // 把主题写成内联 CSS 变量字符串
+    function gsThemeStyle(theme) {
+        return '--gsp-bg:' + theme.bg + ';--gsp-panel:' + theme.panel + ';--gsp-border:' + theme.border +
+            ';--gsp-text:' + theme.text + ';--gsp-dim:' + theme.dim + ';--gsp-accent:' + theme.accent + ';';
+    }
+
+    // ---------- 状态块提取 / 解析 ----------
     window.extractGroupStatusBlock = function (text) {
         if (!text || typeof text !== 'string') return null;
         const m = text.match(GROUP_STATUS_BLOCK_REGEX);
@@ -31480,7 +31540,6 @@ function injectGossipContext(chat, historySlice) {
         return { raw: raw, inner: inner, rest: rest };
     };
 
-    // 解析状态块内容为结构化数据
     window.parseGroupStatusBlock = function (raw) {
         const result = { todos: [], snark: '', members: [] };
         if (!raw) return result;
@@ -31514,9 +31573,12 @@ function injectGossipContext(chat, historySlice) {
         return result;
     };
 
-    // 生成注入提示词（默认协议 + 用户自定义附加要求）
+    // 生成注入提示词（预设自定义协议 > 默认协议，再叠加群自定义附加要求）
     window.getGroupStatusPromptSuffix = function (group) {
-        let text = DEFAULT_GROUP_STATUS_PROMPT;
+        const preset = window.getGroupStatusPreset(group);
+        let text = (preset && typeof preset.prompt === 'string' && preset.prompt.trim())
+            ? preset.prompt.trim()
+            : DEFAULT_GROUP_STATUS_PROMPT;
         const custom = group && group.statusPanel && group.statusPanel.promptSuffix
             ? String(group.statusPanel.promptSuffix).trim() : '';
         if (custom) {
@@ -31525,11 +31587,11 @@ function injectGossipContext(chat, historySlice) {
         return text;
     };
 
-    // 应用状态块：写入 statusPanel.history 并刷新 UI
+    // ---------- 应用 / 重建 ----------
     window.applyGroupStatus = function (group, rawBlock) {
         if (!group) return;
         if (!group.statusPanel) {
-            group.statusPanel = { enabled: false, promptSuffix: '', historyLimit: 2, history: [], currentStatus: null, currentStatusRaw: '' };
+            group.statusPanel = { enabled: false, promptSuffix: '', historyLimit: 2, presetId: null, history: [], currentStatus: null, currentStatusRaw: '' };
         }
         if (!Array.isArray(group.statusPanel.history)) group.statusPanel.history = [];
         const parsed = window.parseGroupStatusBlock(rawBlock);
@@ -31542,7 +31604,6 @@ function injectGossipContext(chat, historySlice) {
         window.updateGroupStatusBar(group);
     };
 
-    // 从聊天历史重建状态（删除/重新生成后调用）
     window.recalculateGroupStatus = function (group) {
         if (!group || !Array.isArray(group.members)) return;
         if (!group.statusPanel) return;
@@ -31558,12 +31619,15 @@ function injectGossipContext(chat, historySlice) {
         window.updateGroupStatusBar(group);
     };
 
-    // 像素风面板 HTML
+    // ---------- 渲染 ----------
     window.buildGroupStatusHtml = function (parsed, group) {
+        const theme = window.getGroupStatusTheme(group);
+        let html = '<div class="gsp-themed" style="' + gsThemeStyle(theme) + '">';
         if (!parsed) {
-            return '<div class="gsp-panel"><div class="gsp-header">▶ 群状态 ◀</div><div class="gsp-empty">状态待更新，发送一条消息试试</div></div>';
+            html += '<div class="gsp-panel"><div class="gsp-header">▶ 群状态 ◀</div><div class="gsp-empty">状态待更新，发送一条消息试试</div></div></div>';
+            return html;
         }
-        let html = '<div class="gsp-panel">';
+        html += '<div class="gsp-panel">';
         html += '<div class="gsp-header">▶ 群状态 ◀</div>';
 
         html += '<div class="gsp-section"><div class="gsp-section-title">📌 剧情待办</div>';
@@ -31604,11 +31668,10 @@ function injectGossipContext(chat, historySlice) {
         });
         html += '</div></div>';
 
-        html += '</div>';
+        html += '</div></div>';
         return html;
     };
 
-    // 聊天室顶部的像素小条
     window.updateGroupStatusBar = function (group) {
         const bar = document.getElementById('group-status-bar');
         if (!bar) return;
@@ -31618,6 +31681,7 @@ function injectGossipContext(chat, historySlice) {
             bar.style.display = 'none';
             return;
         }
+        bar.style.cssText = gsThemeStyle(window.getGroupStatusTheme(group));
         bar.style.display = 'flex';
         const parsed = group.statusPanel.currentStatus;
         const textEl = document.getElementById('group-status-bar-text');
@@ -31632,7 +31696,6 @@ function injectGossipContext(chat, historySlice) {
         }
     };
 
-    // 像素风历史面板（复用私聊状态栏的 swiper 结构）
     window.openGroupStatusPanel = function () {
         const overlay = document.getElementById('group-status-overlay');
         const content = document.getElementById('group-status-content');
@@ -31654,7 +31717,7 @@ function injectGossipContext(chat, historySlice) {
                 const pad = n => String(n).padStart(2, '0');
                 slide.innerHTML = '<div class="status-slide-inner">' +
                     window.buildGroupStatusHtml(entry.parsed, group) +
-                    '<div style="text-align:center;font-size:11px;color:#306230;margin-top:8px;font-family:\'Courier New\',monospace;">' +
+                    '<div class="gsp-time-note" style="text-align:center;font-size:11px;margin-top:8px;font-family:\'Courier New\',monospace;">' +
                     date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) +
                     '　' + (idx + 1) + '/' + historyArr.length + '</div>' +
                     '</div>';
@@ -31683,6 +31746,66 @@ function injectGossipContext(chat, historySlice) {
         overlay.classList.add('visible');
     };
 
+    // ---------- 预设导入 ----------
+    // JSON 格式：{ "name": "预设名", "theme": { "bg": "#xxxxxx", ... }, "prompt": "可选自定义协议" }
+    window.importGroupStatusPreset = function (file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('不是有效的预设 JSON');
+                    const name = String(data.name || '').trim();
+                    if (!name) throw new Error('缺少 name 字段');
+                    const themeSrc = data.theme && typeof data.theme === 'object' ? data.theme : {};
+                    const theme = {};
+                    Object.keys(DEFAULT_GSP_THEME).forEach(k => {
+                        const v = themeSrc[k];
+                        if (typeof v === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(v.trim())) theme[k] = v.trim();
+                    });
+                    if (Object.keys(theme).length === 0 && !(typeof data.prompt === 'string' && data.prompt.trim())) {
+                        throw new Error('theme 与 prompt 至少要有一个有效内容');
+                    }
+                    if (!Array.isArray(db.groupStatusPresets)) db.groupStatusPresets = [];
+                    const preset = {
+                        id: 'gsp_' + Date.now(),
+                        name: name,
+                        theme: theme,
+                        prompt: typeof data.prompt === 'string' ? data.prompt : '',
+                        importedAt: Date.now()
+                    };
+                    db.groupStatusPresets.push(preset);
+                    await saveData();
+                    showToast('状态栏预设「' + name + '」已导入');
+                    resolve(preset);
+                } catch (err) {
+                    console.error('状态栏预设导入失败:', err);
+                    showToast('导入失败：' + (err && err.message ? err.message : '未知错误'));
+                    resolve(null);
+                }
+            };
+            reader.onerror = () => { showToast('文件读取失败'); resolve(null); };
+            reader.readAsText(file);
+        });
+    };
+
+    window.deleteGroupStatusPreset = async function (presetId) {
+        if (!Array.isArray(db.groupStatusPresets)) return false;
+        const idx = db.groupStatusPresets.findIndex(p => p.id === presetId);
+        if (idx < 0) return false;
+        const name = db.groupStatusPresets[idx].name;
+        db.groupStatusPresets.splice(idx, 1);
+        // 引用该预设的群回退默认主题
+        (db.groups || []).forEach(g => {
+            if (g.statusPanel && g.statusPanel.presetId === presetId) {
+                g.statusPanel.presetId = null;
+            }
+        });
+        await saveData();
+        showToast('已删除预设「' + name + '」');
+        return true;
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('click', (e) => {
             if (e.target.closest('#group-status-bar')) {
@@ -31704,23 +31827,21 @@ function injectGossipContext(chat, historySlice) {
 
 </script> <!-- 群聊像素状态栏 -->
 <script>
-/* inlined: js/modules/group_memory.js */
 // ============================================================
-// 群记忆挂载
-// 群聊：功能面板「群记忆」→ 选择消息（可预览）→ 直接挂载原文
-//        或 AI 一键总结（≤4000 字）→ 存为群的“日记/总结”并选择
-//        挂载给哪些群成员（按 originalCharId 关联单聊角色）。
-// 单聊：被挂载的记忆注入该角色的上下文（原生链 <群聊记忆> 块 /
-//        酒馆链 worldInfoBefore）；功能面板「群记忆」可管理
-//        （屏蔽某条 / 解除挂载）。
-// 日记详情页：群内生成的总结可直接在详情里管理挂载对象。
+// 记忆互挂（群聊 ⇄ 单聊）
+// 群 → 单聊：群的「智能总结」在详情页挂载给指定成员（按 originalCharId），
+//   TA 的单聊上下文注入 <群聊记忆> 块（原生链）/ worldInfoBefore（酒馆链）。
+// 单聊 → 群：角色的「日记」在详情页挂载到指定群聊，
+//   群聊上下文注入 <私聊记忆> 块（原生链入系统提示词 / 酒馆链 worldInfoBefore）。
+//   保密规则：每条私聊记忆只有当事人知道，其他成员不知情，
+//   除非当事人在群内做出实质性透露行为。
+// 单聊功能面板「群记忆」：查看/屏蔽/解除挂在当前角色身上的群记忆。
 // ============================================================
 (function () {
     'use strict';
 
     const GM_ENTRY_LIMIT = 1500;  // 单条记忆注入上限
     const GM_TOTAL_LIMIT = 4000;  // 注入总上限
-    const GM_SUMMARY_LIMIT = 4000; // AI 总结字数上限
 
     function gmEscape(str) {
         return String(str == null ? '' : str)
@@ -31728,37 +31849,17 @@ function injectGossipContext(chat, historySlice) {
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    function gmMsgText(msg) {
-        if (!msg) return '';
-        if (typeof msg.content === 'string') return msg.content;
-        if (Array.isArray(msg.parts)) {
-            return msg.parts.filter(p => p.type === 'text').map(p => p.text || '').join('\n');
-        }
-        return '';
-    }
-
-    // ---------- 注入块构建（单聊调用） ----------
-    window.buildGroupMemoryBlock = function (charId) {
-        if (!charId || !db.groups) return '';
-        const entries = [];
-        db.groups.forEach(group => {
-            (group.memoryJournals || []).forEach(j => {
-                if (!Array.isArray(j.mountCharIds) || !j.mountCharIds.includes(charId)) return;
-                if (Array.isArray(j.mutedCharIds) && j.mutedCharIds.includes(charId)) return;
-                entries.push({ group: group, journal: j });
-            });
-        });
-        if (entries.length === 0) return '';
-        entries.sort((a, b) => (b.journal.createdAt || 0) - (a.journal.createdAt || 0)); // 新的在前
-
+    // 通用：按上限组装记忆条目（新的在前，单条截断 1500，总量 4000）
+    function gmPackEntries(entries, headerFn) {
+        entries.sort((a, b) => ((b.journal.createdAt || 0) - (a.journal.createdAt || 0)));
         let total = 0;
         const blocks = [];
-        for (const { group, journal } of entries) {
-            let content = String(journal.content || '');
+        for (const entry of entries) {
+            let content = String(entry.journal.content || '');
             if (content.length > GM_ENTRY_LIMIT) {
                 content = content.slice(0, GM_ENTRY_LIMIT) + '……';
             }
-            const block = '【群聊记忆·' + (group.name || '群聊') + '】' + (journal.title || '未命名') + '\n' + content;
+            const block = headerFn(entry) + '\n' + content;
             const remain = GM_TOTAL_LIMIT - total;
             if (remain <= 0) break;
             if (block.length <= remain) {
@@ -31772,404 +31873,146 @@ function injectGossipContext(chat, historySlice) {
                 break;
             }
         }
+        return blocks;
+    }
+
+    // ---------- 群 → 单聊：注入块 ----------
+    window.buildGroupMemoryBlock = function (charId) {
+        if (!charId || !db.groups) return '';
+        const entries = [];
+        db.groups.forEach(group => {
+            (group.memoryJournals || []).forEach(j => {
+                if (!Array.isArray(j.mountCharIds) || !j.mountCharIds.includes(charId)) return;
+                if (Array.isArray(j.mutedCharIds) && j.mutedCharIds.includes(charId)) return;
+                entries.push({ group: group, journal: j });
+            });
+        });
+        if (entries.length === 0) return '';
+        const blocks = gmPackEntries(entries, e => '【群聊记忆·' + (e.group.name || '群聊') + '】' + (e.journal.title || '未命名'));
         if (blocks.length === 0) return '';
         return '<群聊记忆>\n以下是你在群聊中经历过的重要事情（用户从群聊挂载给你的记忆）：\n\n' +
             blocks.join('\n\n---\n\n') + '\n</群聊记忆>';
     };
 
-    // ---------- 群记忆选择器 ----------
-    const gmPickState = {
-        groupId: null,
-        messages: [],
-        selected: new Set(),
-        rangeAnchor: null,
-        shownCount: 200
+    // ---------- 单聊 → 群：注入块（含保密规则） ----------
+    window.buildPrivateMemoryBlock = function (groupId) {
+        if (!groupId || !db.characters) return '';
+        const group = (db.groups || []).find(g => g.id === groupId);
+        if (!group) return '';
+        const entries = [];
+        db.characters.forEach(char => {
+            (char.memoryJournals || []).forEach(j => {
+                if (!Array.isArray(j.mountGroupIds) || !j.mountGroupIds.includes(groupId)) return;
+                entries.push({ char: char, journal: j });
+            });
+        });
+        if (entries.length === 0) return '';
+        const blocks = gmPackEntries(entries, e => {
+            // 用群内真名标注当事人，便于群聊上下文对号入座
+            const member = (group.members || []).find(m => m.originalCharId === e.char.id);
+            const who = member ? member.realName : (e.char.realName || e.char.name || '未知角色');
+            return '【私聊记忆·' + who + '】' + (e.journal.title || '未命名');
+        });
+        if (blocks.length === 0) return '';
+        return '<私聊记忆>\n以下是部分群成员与你（用户）在私聊中经历过的重要事情（用户挂载进本群的记忆）。\n' +
+            '【保密规则·最高优先级】每条私聊记忆只有对应的当事人知道，其他群成员一律不知情。' +
+            '除非当事人在群聊中主动说出、或以其他实质性行为透露自己的私聊记忆，否则任何角色都不得表现出知道他人的私聊记忆——不得提及、不得暗示、不得以此影响其言行与态度。\n\n' +
+            blocks.join('\n\n---\n\n') + '\n</私聊记忆>';
     };
 
-    function gmEligibleMessages(group) {
-        return (group.history || []).filter(m => {
-            if (m.role !== 'user' && m.role !== 'assistant') return false;
-            if (m.isContextDisabled || m.isThinking || m.isGroupStatus || m.isStatusUpdate) return false;
-            const text = gmMsgText(m).trim();
-            return text !== '';
-        });
-    }
-
-    function gmSenderName(group, msg) {
-        if (msg.role === 'user') {
-            return (group.me && group.me.nickname) ? group.me.nickname : '我';
-        }
-        if (msg.senderId) {
-            const member = (group.members || []).find(m => m.id === msg.senderId);
-            if (member) return member.groupNickname || member.realName;
-        }
-        const text = gmMsgText(msg);
-        const m = text.match(/^\[([^\]：:]+?)(?:的消息)?[：:]/);
-        if (m) return m[1];
-        return '旁白';
-    }
-
-    function gmPickerModal() {
-        let modal = document.getElementById('group-memory-picker-modal');
-        if (modal) return modal;
-        modal = document.createElement('div');
-        modal.id = 'group-memory-picker-modal';
-        modal.className = 'modal-overlay';
-        modal.innerHTML = [
-            '<div class="modal-window" style="max-width:420px;width:92%;max-height:82vh;display:flex;flex-direction:column;">',
-            '    <h3 style="margin:0 0 4px;">选择要挂载的群聊记录</h3>',
-            '    <div style="font-size:12px;color:#999;margin-bottom:8px;">点按选择单条；开启「框选」后连点两条可选中区间</div>',
-            '    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">',
-            '        <span id="gm-pick-stats" style="font-size:12px;color:#ff5c8a;flex:1;">已选 0 条 · 约 0 字</span>',
-            '        <label style="font-size:12px;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="gm-pick-range-mode"> 框选</label>',
-            '    </div>',
-            '    <div id="gm-pick-list" style="flex:1;overflow-y:auto;border:1px solid #eee;border-radius:10px;background:#fafafa;"></div>',
-            '    <div style="display:flex;gap:8px;margin-top:10px;">',
-            '        <button type="button" class="btn btn-secondary" id="gm-pick-cancel" style="flex:1;">取消</button>',
-            '        <button type="button" class="btn btn-secondary" id="gm-pick-raw" style="flex:1;">挂载原文</button>',
-            '        <button type="button" class="btn btn-primary" id="gm-pick-ai" style="flex:1;">AI 总结挂载</button>',
-            '    </div>',
-            '</div>'
-        ].join('');
-        document.body.appendChild(modal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.remove('visible');
-        });
-        modal.querySelector('#gm-pick-cancel').addEventListener('click', () => modal.classList.remove('visible'));
-        modal.querySelector('#gm-pick-raw').addEventListener('click', () => gmConfirmPick(false));
-        modal.querySelector('#gm-pick-ai').addEventListener('click', () => gmConfirmPick(true));
-        return modal;
-    }
-
-    function gmRenderPickList() {
-        const list = document.getElementById('gm-pick-list');
-        if (!list) return;
-        const group = db.groups.find(g => g.id === gmPickState.groupId);
-        if (!group) return;
-        const msgs = gmPickState.messages;
-        const shown = msgs.slice(-gmPickState.shownCount);
-        list.innerHTML = '';
-        if (msgs.length > shown.length) {
-            const more = document.createElement('div');
-            more.style.cssText = 'text-align:center;padding:8px;font-size:12px;color:#ff5c8a;cursor:pointer;';
-            more.textContent = '加载更早的 ' + Math.min(200, msgs.length - shown.length) + ' 条（共 ' + msgs.length + ' 条）';
-            more.addEventListener('click', () => {
-                gmPickState.shownCount += 200;
-                gmRenderPickList();
-            });
-            list.appendChild(more);
-        }
-        shown.forEach(msg => {
-            const row = document.createElement('div');
-            const selected = gmPickState.selected.has(msg.id);
-            row.style.cssText = 'padding:8px 10px;border-bottom:1px solid #f0f0f0;cursor:pointer;' +
-                (selected ? 'background:#ffe3ec;' : 'background:#fff;');
-            const text = gmMsgText(msg).replace(/\s+/g, ' ').trim();
-            const preview = text.length > 80 ? text.slice(0, 80) + '…' : text;
-            const date = new Date(msg.timestamp || Date.now());
-            const pad = n => String(n).padStart(2, '0');
-            const timeStr = pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
-            row.innerHTML =
-                '<div style="display:flex;gap:8px;align-items:flex-start;">' +
-                '    <span style="flex-shrink:0;font-size:14px;">' + (selected ? '☑' : '☐') + '</span>' +
-                '    <span style="flex:1;min-width:0;">' +
-                '        <span style="font-size:12px;color:#999;">' + gmEscape(gmSenderName(group, msg)) + ' · ' + timeStr + '</span>' +
-                '        <span style="display:block;font-size:13px;word-break:break-all;">' + gmEscape(preview) + '</span>' +
-                '    </span>' +
-                '</div>';
-            row.addEventListener('click', () => gmTogglePick(msg));
-            list.appendChild(row);
-        });
-        gmUpdatePickStats();
-    }
-
-    function gmTogglePick(msg) {
-        const rangeMode = document.getElementById('gm-pick-range-mode');
-        if (rangeMode && rangeMode.checked) {
-            if (gmPickState.rangeAnchor === null) {
-                gmPickState.rangeAnchor = msg.id;
-                gmPickState.selected.add(msg.id);
-                showToast('已选起点，再点一条确定区间');
-            } else {
-                const msgs = gmPickState.messages;
-                const ai = msgs.findIndex(m => m.id === gmPickState.rangeAnchor);
-                const bi = msgs.findIndex(m => m.id === msg.id);
-                if (ai !== -1 && bi !== -1) {
-                    const [from, to] = ai <= bi ? [ai, bi] : [bi, ai];
-                    for (let i = from; i <= to; i++) gmPickState.selected.add(msgs[i].id);
-                }
-                gmPickState.rangeAnchor = null;
-            }
-        } else {
-            if (gmPickState.selected.has(msg.id)) {
-                gmPickState.selected.delete(msg.id);
-            } else {
-                gmPickState.selected.add(msg.id);
-            }
-        }
-        gmRenderPickList();
-    }
-
-    function gmUpdatePickStats() {
-        const el = document.getElementById('gm-pick-stats');
-        if (!el) return;
-        let chars = 0;
-        gmPickState.messages.forEach(m => {
-            if (gmPickState.selected.has(m.id)) chars += gmMsgText(m).length;
-        });
-        el.textContent = '已选 ' + gmPickState.selected.size + ' 条 · 约 ' + chars + ' 字';
-    }
-
-    window.openGroupMemoryPicker = function () {
-        const group = db.groups.find(g => g.id === currentChatId);
-        if (!group || !Array.isArray(group.members)) {
-            showToast('请在群聊中使用');
-            return;
-        }
-        gmPickState.groupId = group.id;
-        gmPickState.messages = gmEligibleMessages(group);
-        gmPickState.selected = new Set();
-        gmPickState.rangeAnchor = null;
-        gmPickState.shownCount = 200;
-        if (gmPickState.messages.length === 0) {
-            showToast('暂无可挂载的聊天记录');
-            return;
-        }
-        const modal = gmPickerModal();
-        const rangeMode = modal.querySelector('#gm-pick-range-mode');
-        if (rangeMode) rangeMode.checked = false;
-        gmRenderPickList();
-        modal.classList.add('visible');
-    };
-
-    function gmConfirmPick(useAi) {
-        if (gmPickState.selected.size === 0) {
-            showToast('请先选择聊天记录');
-            return;
-        }
-        const group = db.groups.find(g => g.id === gmPickState.groupId);
-        if (!group) return;
-        const selectedMsgs = gmPickState.messages
-            .filter(m => gmPickState.selected.has(m.id))
-            .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-        document.getElementById('group-memory-picker-modal').classList.remove('visible');
-        if (useAi) {
-            gmRunAiSummary(group, selectedMsgs);
-        } else {
-            const rawText = selectedMsgs.map(m => {
-                return gmSenderName(group, m) + '：' + gmMsgText(m).trim();
-            }).join('\n');
-            gmOpenEditModal(group, {
-                title: '群聊记录 ' + selectedMsgs.length + ' 条',
-                content: rawText.length > GM_SUMMARY_LIMIT ? rawText.slice(0, GM_SUMMARY_LIMIT) : rawText
-            }, selectedMsgs);
-        }
-    }
-
-    async function gmRunAiSummary(group, selectedMsgs, extraInstruction) {
-        const rawText = selectedMsgs.map(m => {
-            return gmSenderName(group, m) + '：' + gmMsgText(m).trim();
-        }).join('\n');
-
-        const buildPrompt = (compress) => [
-            '你是群聊记录整理助手。请将以下群聊记录' + (compress ? '进一步压缩' : '总结') + '为一段不超过 ' + GM_SUMMARY_LIMIT + ' 字的记忆文本，供群成员在单聊时回忆使用。',
-            '要求：以第三人称客观叙述；保留关键事件、人物关系变化和重要约定；按时间顺序组织；直接输出正文，不要任何标题、标签或解释。',
-            extraInstruction ? ('额外要求：' + extraInstruction) : '',
-            '',
-            '【群聊记录】',
-            rawText
-        ].filter(Boolean).join('\n');
-
-        showToast('正在生成群记忆总结…');
-        try {
-            const apiConfig = resolveAuxiliaryApiConfig('journal');
-            if (!apiConfig || !apiConfig.url || !apiConfig.key || !apiConfig.model) {
-                throw new Error('日记/总结所用的辅助 API 未配置完整');
-            }
-            let { requestBody, endpoint, headers } = buildChatApiRequest(
-                apiConfig, [{ role: 'user', content: buildPrompt(false) }], { temperature: 0.5 });
-            let text = String(await fetchAiResponse(apiConfig, requestBody, headers, endpoint) || '').trim();
-
-            if (text.length > GM_SUMMARY_LIMIT) {
-                // 超限：压缩重试一次
-                const retry = buildChatApiRequest(
-                    apiConfig,
-                    [{ role: 'user', content: buildPrompt(true) + '\n\n【上一版超限草稿】\n' + text }],
-                    { temperature: 0.3 });
-                text = String(await fetchAiResponse(apiConfig, retry.requestBody, retry.headers, retry.endpoint) || '').trim();
-            }
-            if (text.length > GM_SUMMARY_LIMIT) {
-                text = text.slice(0, GM_SUMMARY_LIMIT);
-            }
-            if (!text) throw new Error('AI 返回了空内容');
-            gmOpenEditModal(group, { title: '群记忆 ' + new Date().toLocaleDateString(), content: text }, selectedMsgs);
-        } catch (err) {
-            console.error('群记忆总结失败:', err);
-            showToast('AI 总结失败：' + (err && err.message ? err.message : '未知错误'));
-        }
-    }
-
-    // ---------- 编辑 / 保存 ----------
-    function gmOpenEditModal(group, draft, selectedMsgs) {
-        let modal = document.getElementById('gm-edit-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'gm-edit-modal';
-            modal.className = 'modal-overlay';
-            modal.innerHTML = [
-                '<div class="modal-window" style="max-width:420px;width:92%;max-height:82vh;overflow-y:auto;">',
-                '    <h3 style="margin-top:0;">保存群记忆</h3>',
-                '    <div class="form-group"><label>标题</label><input type="text" id="gm-edit-title"></div>',
-                '    <div class="form-group"><label>内容 <span id="gm-edit-count" style="color:#999;font-weight:normal;">0/' + GM_SUMMARY_LIMIT + '</span></label>',
-                '        <textarea id="gm-edit-content" rows="10" style="width:100%;"></textarea></div>',
-                '    <div class="form-group"><label>挂载给（在 TA 的单聊中生效）</label>',
-                '        <div id="gm-edit-members" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>',
-                '    <div style="display:flex;gap:8px;margin-top:10px;">',
-                '        <button type="button" class="btn btn-secondary" id="gm-edit-cancel" style="flex:1;">取消</button>',
-                '        <button type="button" class="btn btn-primary" id="gm-edit-save" style="flex:1;">保存</button>',
-                '    </div>',
-                '</div>'
-            ].join('');
-            document.body.appendChild(modal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.classList.remove('visible');
-            });
-            modal.querySelector('#gm-edit-cancel').addEventListener('click', () => modal.classList.remove('visible'));
-            modal.querySelector('#gm-edit-content').addEventListener('input', () => {
-                const ta = modal.querySelector('#gm-edit-content');
-                modal.querySelector('#gm-edit-count').textContent = ta.value.length + '/' + GM_SUMMARY_LIMIT;
-            });
-        }
-
-        const titleInput = modal.querySelector('#gm-edit-title');
-        const contentInput = modal.querySelector('#gm-edit-content');
-        titleInput.value = draft.title || '';
-        contentInput.value = draft.content || '';
-        modal.querySelector('#gm-edit-count').textContent = contentInput.value.length + '/' + GM_SUMMARY_LIMIT;
-
-        // 成员 chips（仅有关联单聊角色卡的成员可挂载）
-        const membersBox = modal.querySelector('#gm-edit-members');
-        membersBox.innerHTML = '';
-        const mountable = (group.members || []).filter(m => m.originalCharId);
-        if (mountable.length === 0) {
-            membersBox.innerHTML = '<span style="font-size:12px;color:#999;">群内成员均未关联角色卡，暂无法挂载到单聊</span>';
-        }
-        const chosen = new Set();
-        mountable.forEach(member => {
-            const chip = document.createElement('span');
-            chip.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;font-size:12px;cursor:pointer;background:#f0f0f2;border:1px solid #ddd;';
-            chip.innerHTML = '<img src="' + gmEscape(member.avatar || '') + '" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">' + gmEscape(member.groupNickname || member.realName);
-            chip.addEventListener('click', () => {
-                if (chosen.has(member.originalCharId)) {
-                    chosen.delete(member.originalCharId);
-                    chip.style.background = '#f0f0f2';
-                    chip.style.borderColor = '#ddd';
-                } else {
-                    chosen.add(member.originalCharId);
-                    chip.style.background = '#ffe3ec';
-                    chip.style.borderColor = '#ff8fab';
-                }
-            });
-            membersBox.appendChild(chip);
-        });
-
-        const saveBtn = modal.querySelector('#gm-edit-save');
-        const newBtn = saveBtn.cloneNode(true);
-        saveBtn.parentNode.replaceChild(newBtn, saveBtn);
-        newBtn.addEventListener('click', async () => {
-            const title = titleInput.value.trim() || '群记忆';
-            let content = contentInput.value.trim();
-            if (!content) {
-                showToast('内容不能为空');
-                return;
-            }
-            if (content.length > GM_SUMMARY_LIMIT) {
-                content = content.slice(0, GM_SUMMARY_LIMIT);
-            }
-            if (!Array.isArray(group.memoryJournals)) group.memoryJournals = [];
-            const ts = selectedMsgs && selectedMsgs.length ? {
-                fromTs: selectedMsgs[0].timestamp || 0,
-                toTs: selectedMsgs[selectedMsgs.length - 1].timestamp || 0,
-                count: selectedMsgs.length
-            } : null;
-            group.memoryJournals.push({
-                id: 'journal_' + Date.now(),
-                range: { start: 0, end: 0 },
-                startMessageId: selectedMsgs && selectedMsgs.length ? selectedMsgs[0].id : null,
-                endMessageId: selectedMsgs && selectedMsgs.length ? selectedMsgs[selectedMsgs.length - 1].id : null,
-                title: title,
-                content: content,
-                createdAt: Date.now(),
-                chatId: group.id,
-                chatType: 'group',
-                isFavorited: false,
-                sourceType: 'group',
-                sourceRange: ts,
-                mountCharIds: Array.from(chosen),
-                mutedCharIds: []
-            });
-            await saveData();
-            modal.classList.remove('visible');
-            showToast(chosen.size > 0 ? ('群记忆已保存，已挂载给 ' + chosen.size + ' 人') : '群记忆已保存（未挂载）');
-            if (typeof renderJournalList === 'function') {
-                try { renderJournalList(); } catch (e) { /* 不在日记页时忽略 */ }
-            }
-        });
-
-        modal.classList.add('visible');
-    }
-
-    // ---------- 日记详情页的挂载管理（群聊总结详情） ----------
+    // ---------- 日记/总结详情页的挂载管理（双向） ----------
     window.renderJournalMountSection = function (journalId) {
         const box = document.getElementById('journal-mount-section');
         if (!box) return;
         box.innerHTML = '';
-        let owner = null, journal = null;
+        let ownerGroup = null, ownerChar = null, journal = null;
         (db.groups || []).forEach(g => {
             (g.memoryJournals || []).forEach(j => {
-                if (j.id === journalId) { owner = g; journal = j; }
+                if (j.id === journalId) { ownerGroup = g; journal = j; }
             });
         });
-        if (!owner || !journal || !Array.isArray(owner.members)) return;
+        if (!journal) {
+            (db.characters || []).forEach(c => {
+                (c.memoryJournals || []).forEach(j => {
+                    if (j.id === journalId) { ownerChar = c; journal = j; }
+                });
+            });
+        }
+        if (!journal) return;
 
         const wrap = document.createElement('div');
         wrap.style.cssText = 'margin-top:18px;padding-top:14px;border-top:1px dashed #ddd;font-family:-apple-system,sans-serif;';
-        wrap.innerHTML = '<div style="font-size:14px;font-weight:600;margin-bottom:8px;">🔗 挂载到单聊</div>' +
-            '<div style="font-size:12px;color:#999;margin-bottom:8px;">选中的成员在与你的单聊中会带上这段群记忆</div>';
-        const chips = document.createElement('div');
-        chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;';
-        const mountable = owner.members.filter(m => m.originalCharId);
-        if (mountable.length === 0) {
-            chips.innerHTML = '<span style="font-size:12px;color:#999;">群内成员均未关联角色卡</span>';
-        }
-        if (!Array.isArray(journal.mountCharIds)) journal.mountCharIds = [];
-        mountable.forEach(member => {
-            const mounted = journal.mountCharIds.includes(member.originalCharId);
-            const chip = document.createElement('span');
-            chip.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;font-size:12px;cursor:pointer;' +
-                (mounted ? 'background:#ffe3ec;border:1px solid #ff8fab;' : 'background:#f0f0f2;border:1px solid #ddd;');
-            chip.innerHTML = '<img src="' + gmEscape(member.avatar || '') + '" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">' + gmEscape(member.groupNickname || member.realName);
-            chip.addEventListener('click', async () => {
-                const idx = journal.mountCharIds.indexOf(member.originalCharId);
-                if (idx >= 0) {
-                    journal.mountCharIds.splice(idx, 1);
-                } else {
-                    journal.mountCharIds.push(member.originalCharId);
-                    if (Array.isArray(journal.mutedCharIds)) {
-                        const mi = journal.mutedCharIds.indexOf(member.originalCharId);
-                        if (mi >= 0) journal.mutedCharIds.splice(mi, 1);
+
+        // 群总结 → 挂载给成员的单聊
+        if (ownerGroup && Array.isArray(ownerGroup.members)) {
+            wrap.innerHTML = '<div style="font-size:14px;font-weight:600;margin-bottom:8px;">🔗 挂载到单聊</div>' +
+                '<div style="font-size:12px;color:#999;margin-bottom:8px;">选中的成员在与你的单聊中会带上这段群记忆</div>';
+            const chips = document.createElement('div');
+            chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;';
+            const mountable = ownerGroup.members.filter(m => m.originalCharId);
+            if (mountable.length === 0) {
+                chips.innerHTML = '<span style="font-size:12px;color:#999;">群内成员均未关联角色卡</span>';
+            }
+            if (!Array.isArray(journal.mountCharIds)) journal.mountCharIds = [];
+            mountable.forEach(member => {
+                const mounted = journal.mountCharIds.includes(member.originalCharId);
+                const chip = document.createElement('span');
+                chip.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;font-size:12px;cursor:pointer;' +
+                    (mounted ? 'background:#ffe3ec;border:1px solid #ff8fab;' : 'background:#f0f0f2;border:1px solid #ddd;');
+                chip.innerHTML = '<img src="' + gmEscape(member.avatar || '') + '" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">' + gmEscape(member.groupNickname || member.realName);
+                chip.addEventListener('click', async () => {
+                    const idx = journal.mountCharIds.indexOf(member.originalCharId);
+                    if (idx >= 0) {
+                        journal.mountCharIds.splice(idx, 1);
+                    } else {
+                        journal.mountCharIds.push(member.originalCharId);
+                        if (Array.isArray(journal.mutedCharIds)) {
+                            const mi = journal.mutedCharIds.indexOf(member.originalCharId);
+                            if (mi >= 0) journal.mutedCharIds.splice(mi, 1);
+                        }
                     }
-                }
-                await saveData();
-                window.renderJournalMountSection(journalId);
+                    await saveData();
+                    window.renderJournalMountSection(journalId);
+                });
+                chips.appendChild(chip);
             });
-            chips.appendChild(chip);
-        });
-        wrap.appendChild(chips);
+            wrap.appendChild(chips);
+        }
+
+        // 角色日记 → 挂载到群聊（仅列出该角色在场的群）
+        if (ownerChar) {
+            const groups = (db.groups || []).filter(g =>
+                (g.members || []).some(m => m.originalCharId === ownerChar.id));
+            wrap.innerHTML = '<div style="font-size:14px;font-weight:600;margin-bottom:8px;">🔗 挂载到群聊</div>' +
+                '<div style="font-size:12px;color:#999;margin-bottom:8px;">选中的群聊里，' + gmEscape(ownerChar.realName || ownerChar.name || 'TA') +
+                ' 会记得这段私聊经历；其他成员不会知道，除非 TA 在群里主动透露</div>';
+            const chips = document.createElement('div');
+            chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;';
+            if (groups.length === 0) {
+                chips.innerHTML = '<span style="font-size:12px;color:#999;">TA 还没有加入任何群聊</span>';
+            }
+            if (!Array.isArray(journal.mountGroupIds)) journal.mountGroupIds = [];
+            groups.forEach(group => {
+                const mounted = journal.mountGroupIds.includes(group.id);
+                const chip = document.createElement('span');
+                chip.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;font-size:12px;cursor:pointer;' +
+                    (mounted ? 'background:#e3ecff;border:1px solid #7aa2f7;' : 'background:#f0f0f2;border:1px solid #ddd;');
+                chip.innerHTML = '<img src="' + gmEscape(group.avatar || '') + '" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">' + gmEscape(group.name || '群聊');
+                chip.addEventListener('click', async () => {
+                    const idx = journal.mountGroupIds.indexOf(group.id);
+                    if (idx >= 0) journal.mountGroupIds.splice(idx, 1); else journal.mountGroupIds.push(group.id);
+                    await saveData();
+                    window.renderJournalMountSection(journalId);
+                });
+                chips.appendChild(chip);
+            });
+            wrap.appendChild(chips);
+        }
+
         box.appendChild(wrap);
     };
 
-    // ---------- 单聊侧的挂载管理 ----------
+    // ---------- 单聊侧的挂载管理（查看/屏蔽/解除群 → 单聊的记忆） ----------
     window.openPrivateMemoryMounts = function () {
         const char = db.characters.find(c => c.id === currentChatId);
         if (!char) {
@@ -32205,7 +32048,7 @@ function injectGossipContext(chat, historySlice) {
             });
         });
         if (items.length === 0) {
-            list.innerHTML = '<p style="text-align:center;color:#999;font-size:13px;padding:20px 0;">还没有挂载任何群记忆<br>去群聊的功能面板 →「群记忆」里选择记录挂载给 TA</p>';
+            list.innerHTML = '<p style="text-align:center;color:#999;font-size:13px;padding:20px 0;">还没有挂载任何群记忆<br>去群聊「总结」里生成一篇，打开详情页即可挂载给 TA</p>';
         }
         items.sort((a, b) => (b.journal.createdAt || 0) - (a.journal.createdAt || 0));
         items.forEach(({ group, journal }) => {
@@ -32244,7 +32087,6 @@ function injectGossipContext(chat, historySlice) {
 
 </script> <!-- 群记忆挂载 -->
 <script>
-/* inlined: js/contacts.js */
 // --- 联系人界面逻辑 (js/contacts.js) ---
 
 let currentPersonaIndex = 0;
@@ -33015,7 +32857,6 @@ async function saveCurrentPersona() {
 
 </script> <!-- 联系人：好友列表、名片 -->
 <script>
-/* inlined: js/modules/chat_room_html.js */
 const chatRoomHtml = `
         <header class="app-header" id="chat-room-header-default">
             <button class="back-btn" data-target="chat-list-screen">
@@ -33222,12 +33063,6 @@ const chatRoomHtml = `
                         </div>
                         <span class="expansion-item-name">预设</span>
                     </div>
-                    <div class="expansion-item" id="group-memory-btn" style="display: none;">
-                        <div class="expansion-item-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-journal-bookmark" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z"/><path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/><path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/></svg>
-                        </div>
-                        <span class="expansion-item-name">群记忆</span>
-                    </div>
                     <div class="expansion-item" id="private-memory-mount-btn" style="display: none;">
                         <div class="expansion-item-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-journal-bookmark" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z"/><path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/><path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/></svg>
@@ -33290,7 +33125,6 @@ function injectChatRoomHtml() {
 
 </script> <!-- 聊天室HTML注入 -->
 <script>
-/* inlined: js/modules/chat_settings_html.js */
 const chatSettingsHtml = `
         <header class="app-header">
             <button class="back-btn" data-target="chat-room-screen">‹</button>
@@ -33942,7 +33776,6 @@ document.addEventListener('change', async (e) => {
 
 </script> <!-- 聊天设置HTML注入 -->
 <script>
-/* inlined: js/modules/group_settings_html.js */
 const groupSettingsHtml = `
         <header class="app-header">
             <button class="back-btn" data-target="chat-room-screen">‹</button>
@@ -34055,6 +33888,17 @@ const groupSettingsHtml = `
                                     <input type="checkbox" id="setting-group-status-enabled">
                                     <span class="kkt-slider"></span>
                                 </label>
+                            </div>
+                        </div>
+                        <div class="kkt-item">
+                            <div class="kkt-item-label">状态栏预设</div>
+                            <div class="kkt-item-control" style="gap:6px;">
+                                <select id="setting-group-status-preset-select" style="border:none; background:transparent; text-align:right; direction: rtl; appearance: none; -webkit-appearance: none; max-width: 130px;">
+                                    <option value="">默认（像素·米色）</option>
+                                </select>
+                                <button type="button" id="setting-group-status-preset-import" style="border:1px solid #eee; background:#fff; border-radius:6px; font-size:11px; padding:2px 8px;">导入</button>
+                                <button type="button" id="setting-group-status-preset-delete" style="display:none; border:1px solid #f5c6d0; background:#fff; color:#e74c3c; border-radius:6px; font-size:11px; padding:2px 8px;">删除</button>
+                                <input type="file" id="setting-group-status-preset-file" accept=".json" style="display:none;">
                             </div>
                         </div>
                         <div class="kkt-item">
@@ -34277,7 +34121,6 @@ function injectGroupSettingsHtml() {
 
 </script> <!-- 群聊设置HTML注入 -->
 <script>
-/* inlined: js/modules/my_profile_html.js */
 document.addEventListener('DOMContentLoaded', () => {
     const myProfileHtml = `
         <header class="app-header">
@@ -34390,7 +34233,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 我的档案HTML注入 -->
 <script>
-/* inlined: js/modules/shop_html.js */
 document.addEventListener('DOMContentLoaded', () => {
     const shopHtml = `
     <header class="app-header">
@@ -34532,7 +34374,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 商城HTML注入 -->
 <script>
-/* inlined: js/modules/settings_chat.js */
 // --- 聊天设置与管理逻辑 ---
 
 function setupChatSettings() {
@@ -35436,7 +35277,6 @@ function recalculateChatStatus(chat) {
 
 </script> <!-- 聊天设置与管理 -->
 <script>
-/* inlined: js/modules/keep_alive.js */
 // --- 跨平台持续运行增强 ---
 // 浏览器仍可能被系统挂起；本模块负责提高存活率，并在恢复后补跑全局任务。
 (function () {
@@ -35748,7 +35588,6 @@ function recalculateChatStatus(chat) {
 
 </script> <!-- 跨平台持续运行增强 -->
 <script>
-/* inlined: js/modules/settings_api.js */
 // --- API 设置与预设管理逻辑 ---
 
 function setupApiSettingsApp() {
@@ -36247,7 +36086,6 @@ function importApiPresets() {
 
 </script> <!-- API 设置与预设 -->
 <script>
-/* inlined: js/modules/settings_presets.js */
 // --- 预设管理逻辑 (气泡、人设、字体、提示音、全局CSS) ---
 
 function _getBubblePresets() {
@@ -37275,7 +37113,6 @@ function openSoundManageModal() {
 
 </script> <!-- 预设管理 (气泡、人设等) -->
 <script>
-/* inlined: js/modules/settings_customize.js */
 // --- 个性化与外观设置逻辑 ---
 
 function setupWallpaperApp() {
@@ -37901,7 +37738,6 @@ function renderCustomizeForm() {
 
 <!-- [3. 独立功能模块 (Plugins)] -->
 <script>
-/* inlined: js/modules/sticker.js */
 // --- 表情包管理 (js/modules/sticker.js) ---
 
 async function setupStickerSystem() {
@@ -38300,7 +38136,6 @@ async function sendSticker(sticker) {
 
 </script>   <!-- 表情包管理系统 -->
 <script>
-/* inlined: js/modules/worldbook.js */
 // --- 世界书功能 (js/modules/worldbook.js) ---
 
 let wbViewMode = 'grid'; // 'grid' 或 'list'
@@ -38975,7 +38810,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 世界书设定集 -->
 <script>
-/* inlined: js/modules/peek.js */
 // --- 偷看手机功能 (js/modules/peek.js) ---
 
 let isBatchMode = false;
@@ -41361,7 +41195,6 @@ async function generateBatchPeekContent(appTypes) {
 
 </script>      <!-- 偷看手机(相册/短信等) -->
 <script>
-/* inlined: js/modules/journal.js */
 // --- 回忆日记功能 (js/modules/journal.js) ---
 
 let generatingChatId = null;
@@ -41865,7 +41698,7 @@ function renderJournalList() {
                 <span class="journal-card-date">${formattedDate}</span>
                 <span class="journal-card-range">范围: ${journal.range.start}-${journal.range.end}</span>
             </div>
-            ${(Array.isArray(journal.mountCharIds) && journal.mountCharIds.length > 0) ? `<div style="margin-top:6px;"><span style="font-size:11px;background:#ffe3ec;color:#ff5c8a;border-radius:10px;padding:2px 8px;">已挂载 ${journal.mountCharIds.length} 人</span></div>` : ''}
+            ${((Array.isArray(journal.mountCharIds) ? journal.mountCharIds.length : 0) + (Array.isArray(journal.mountGroupIds) ? journal.mountGroupIds.length : 0)) > 0 ? `<div style="margin-top:6px;"><span style="font-size:11px;background:#ffe3ec;color:#ff5c8a;border-radius:10px;padding:2px 8px;">已挂载 ${(Array.isArray(journal.mountCharIds) && journal.mountCharIds.length) ? journal.mountCharIds.length + ' 人' : ''}${(Array.isArray(journal.mountCharIds) && journal.mountCharIds.length && Array.isArray(journal.mountGroupIds) && journal.mountGroupIds.length) ? ' · ' : ''}${(Array.isArray(journal.mountGroupIds) && journal.mountGroupIds.length) ? journal.mountGroupIds.length + ' 群' : ''}</span></div>` : ''}
         `;
 
         if (journal.isFavorited) {
@@ -42226,7 +42059,6 @@ function migrateJournalSettings(chat) {
 
 </script>   <!-- 回忆日记生成 -->
 <script>
-/* inlined: js/modules/storage_html.js */
 // js/modules/storage_html.js
 
 function injectStorageHTML() {
@@ -42313,7 +42145,6 @@ document.addEventListener('DOMContentLoaded', injectStorageHTML);
 
 </script> <!-- 存储空间HTML注入 -->
 <script>
-/* inlined: js/modules/storage.js */
 // --- 存储分析与数据管理 (js/modules/storage.js) ---
 
 const STORAGE_CATEGORIES = [
@@ -43204,7 +43035,6 @@ window.setupCleanImageCache = setupCleanImageCache;
 
 </script>   <!-- 存储空间分析图表 -->
 <script>
-/* inlined: js/modules/widgets.js */
 // --- 小组件管理 (js/modules/widgets.js) ---
 
 function setupInsWidgetAvatarModal() {
@@ -43404,7 +43234,6 @@ function setupHeartPhotoModal() {
 
 </script>   <!-- 桌面小组件设置 -->
 <script>
-/* inlined: js/modules/widget_market.js */
 // --- 小组件市场 (js/modules/widget_market.js) ---
 
 // --- 小组件市场 (js/modules/widget_market.js) ---
@@ -44699,7 +44528,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script> <!-- 小组件市场 -->
 <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
 <script>
-/* inlined: js/modules/backup_stream.js */
 /**
  * 流式备份导入导出模块（v4.0 分块格式）
  * 解决大备份文件在 iPhone Safari 上一次性解压 + JSON.parse 导致的内存崩溃：
@@ -45277,7 +45105,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 流式备份导入导出 -->
 <script>
-/* inlined: js/modules/tutorial.js */
 // --- 教程与备份功能 (js/modules/tutorial.js) ---
 
 function setupTutorialApp() {
@@ -46364,7 +46191,6 @@ window.triggerManualBackup = triggerManualBackup;
 
 </script>  <!-- 教程、更新日志、GitHub备份 -->
 <script>
-/* inlined: js/modules/more_menu.js */
 // --- Menu Screen & Status Bar Manager Logic ---
 
 // 初始化 Menu 页面
@@ -46772,7 +46598,6 @@ window.deleteStatusBarPreset = deleteStatusBarPreset;
 
 </script> <!-- 更多菜单与状态栏管理 -->
 <script>
-/* inlined: js/modules/search.js */
 // --- 搜索聊天记录模块 ---
 
 const SearchSystem = {
@@ -47262,7 +47087,6 @@ window.SearchSystem = SearchSystem;
 
 </script> <!-- 聊天记录搜索模块 -->
 <script>
-/* inlined: js/modules/battery_interaction.js */
 /**
  * 电量交互模块
  * 负责监听设备电量状态，并在满足特定条件时（低电量且未充电）
@@ -47548,7 +47372,6 @@ window.BatteryInteraction = BatteryInteraction;
 
 </script> <!-- 电量交互模块 -->
 <script>
-/* inlined: js/modules/gallery.js */
 // --- 角色相册管理模块 (js/modules/gallery.js) ---
 
 function setupGalleryManagement() {
@@ -47939,7 +47762,6 @@ function renderGalleryPresets() {
 
 </script> <!-- 角色相册管理模块 -->
 <script>
-/* inlined: js/modules/shop.js */
 // SVG 图标库
 const ShopIcons = {
     food: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>`, // 汉堡/饮料
@@ -48989,7 +48811,6 @@ window.setupShopSystem = function() {
 
 </script>    <!-- 商城模块 -->
 <script>
-/* inlined: js/modules/cot_settings.js */
 // --- 思维链(CoT)设置模块 ---
 
 const DEFAULT_COT_ITEMS_UWU = [
@@ -50122,7 +49943,6 @@ window.initCotSettings = initCotSettings;
 
 </script> <!-- 思维链设置模块 -->
 <script>
-/* inlined: js/modules/video_call.js */
 // js/modules/video_call.js
 
 const CAMERA_ON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/></svg>`;
@@ -51510,7 +51330,6 @@ window.VideoCallModule = VideoCallModule;
 
 </script> <!-- 视频通话模块 -->
 <script>
-/* inlined: js/workshop_html.js */
 function injectWorkshopHTML() {
     const workshopHTML = `
 <!-- Drawing Workshop Screen -->
@@ -52107,7 +51926,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 绘图工坊HTML注入 -->
 <script>
-/* inlined: js/modules/image-workshop/settings.js */
 // --- 设置绑定与持久化 ---
 async function initWorkshopSettings() {
     if (!db.workshopSettings) return;
@@ -52901,7 +52719,6 @@ function initWorkshopModels() {
 
 </script>
 <script>
-/* inlined: js/modules/image-workshop/prompts.js */
 // --- GPT 标签系统逻辑 ---
 function initGPTTagsSystem() {
     const tagsListContainer = document.getElementById('workshop-gpt-tags-list');
@@ -54480,7 +54297,6 @@ function initWorkshopLLMPrompts() {
 
 </script>
 <script>
-/* inlined: js/modules/image-workshop/generation.js */
 // --- 生图核心逻辑 ---
 let currentGeneratedImage = null;
 let currentGeneratedPayload = null;
@@ -55219,7 +55035,6 @@ function renderPreviewImage(imageData) {
 
 </script>
 <script>
-/* inlined: js/modules/image-workshop/vibe.js */
 // --- Vibe 逻辑 ---
 function initWorkshopVibe() {
     const toggle = document.getElementById('workshop-vibe-toggle');
@@ -55577,7 +55392,6 @@ function initWorkshopVibe() {
 
 </script>
 <script>
-/* inlined: js/modules/image-workshop/history.js */
 // --- 历史记录管理 ---
 async function saveToHistory(base64Image, payload) {
     if (!dexieDB) return;
@@ -55652,7 +55466,6 @@ async function loadWorkshopHistory() {
 
 </script>
 <script>
-/* inlined: js/modules/image-workshop/char.js */
 // --- 角色管理逻辑 ---
 function initWorkshopCharManagement() {
     const addCharBtn = document.getElementById('workshop-add-char-btn');
@@ -55785,7 +55598,6 @@ function initWorkshopCharManagement() {
 
 </script>
 <script>
-/* inlined: js/workshop.js */
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     // initDrawingWorkshop() 将在 main.js 的 init() 中调用，确保数据已加载
@@ -55978,7 +55790,6 @@ function initDrawingWorkshop() {
 
 </script> <!-- 绘图工坊模块 -->
 <script>
-/* inlined: js/modules/console.js */
 (function() {
     const MAX_LOGS = 50;
     const logs = [];
@@ -56169,7 +55980,6 @@ function initDrawingWorkshop() {
 
 </script> <!-- 控制台模块 -->
 <script>
-/* inlined: js/modules/community.js */
 /**
  * UwU 社区模块 (js/modules/community.js)
  * 处理社区搜索跳转及动态页面加载
@@ -56238,7 +56048,6 @@ window.setupCommunityModule = setupCommunityModule;
 
 </script> <!-- 社区模块 -->
 <script>
-/* inlined: js/modules/st_unlock.js */
 // --- SillyTavern 玩家认证模块 (js/modules/st_unlock.js) ---
 
 function setupStUnlock() {
@@ -56548,7 +56357,6 @@ function calculateCRC(bytes) {
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script>
-/* inlined: js/modules/reader_parser.js */
 // --- TXT 解析与处理模块 (js/modules/reader_parser.js) ---
 // 预设的章节正则 Tag 列表
 const CHAPTER_PATTERNS = [
@@ -56814,7 +56622,6 @@ window.readerParser = {
 
 </script> <!-- TXT解析模块 -->
 <script>
-/* inlined: js/modules/reader_converter.js */
 // --- EPUB/PDF 转换模块 (js/modules/reader_converter.js) ---
 // 依赖 CDN 全局库：JSZip（EPUB 解包）、pdfjsLib（PDF 文本提取）
 // 将 EPUB/PDF 统一转换为「书名信息 + 纯文本章节」，复用 TXT 的入库与章节识别链路
@@ -57166,7 +56973,6 @@ window.readerConverter = {
 
 </script> <!-- EPUB/PDF转换模块 -->
 <script>
-/* inlined: js/modules/reader_html.js */
 // --- 阅读器 HTML 结构注入 (js/modules/reader_html.js) ---
 
 const readerHtml = `
@@ -57385,7 +57191,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 阅读器HTML注入 -->
 <script>
-/* inlined: js/modules/reader_bookshelf.js */
 // --- 阅读器书架逻辑 (js/modules/reader_bookshelf.js) ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57854,7 +57659,6 @@ function openReaderView(bookId) {
 
 </script> <!-- 阅读器书架逻辑 -->
 <script>
-/* inlined: js/modules/reader_view.js */
 // --- 阅读器视图逻辑 (js/modules/reader_view.js) ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -59487,7 +59291,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 阅读器视图逻辑 -->
 <script>
-/* inlined: js/modules/st_preset_ui.js */
 // --- 酒馆预设管理 UI 模块 ---
 // 依赖引擎接口 window.stEngine / window.regexEngine（由引擎模块提供，未加载时做存在性判断）
 // 数据契约：db.stPresets（数组）、db.stPresetSettings（{enabled, activePresetId}），改后 saveData()
@@ -60270,7 +60073,6 @@ function runStRegexTester() {
 
 </script> <!-- 酒馆预设管理UI -->
 <script>
-/* inlined: js/modules/reader_coread.js */
 // --- 共读功能模块 (js/modules/reader_coread.js) ---
 // 段评式共读：段落悬浮菜单「💬 和 TA 聊这段」→ 角色选择弹窗 → 调 LLM 生成角色陪读回应，
 // 回应存入段评表 reader_comments（content 加前缀 [COREAD:{charId}]），段评面板中渲染为角色气泡。
@@ -60622,7 +60424,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script> <!-- 阅读器共读模块 -->
 <script>
-/* inlined: js/modules/reader_companion.js */
 // --- 共读增强模块 (js/modules/reader_companion.js) ---
 // v1.9.4：①阅读进度实时同步进聊天提示词 ②弹幕吐槽（本章/当页/自选页，点弹幕纯对话讨论）
 // ③本章读书笔记（共读/TA两种）入书架页笔记库 ④共读世界书勾选注入 LLM 上下文
@@ -61423,7 +61224,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- [4. 程序入口] -->
 <script>
-/* inlined: js/main.js */
 // --- 主程序入口 (js/main.js) ---
 
 // 注册 Service Worker

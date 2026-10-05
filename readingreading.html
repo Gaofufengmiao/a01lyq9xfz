@@ -13788,6 +13788,10 @@ input:checked + .kkt-slider:before {
     font-size: 12px;
     flex: none;
 }
+.tm-task-real {
+    font-size: 12px;
+    color: #a08c5b;
+}
 .tm-task-text {
     font-size: 13px;
     color: #5c4a1f;
@@ -18805,8 +18809,17 @@ const globalSettingKeys = [
 ];
 
 
-const appVersion = "1.9.9";
+const appVersion = "1.9.10";
 const updateLog = [
+    {
+        version: "1.9.10",
+        date: "2026-10-05",
+        notes: [
+            "🧙 任务魔改上线：副本生成不再被现实任务的字面意思绑死，AI 会把你的任务魔改成符合世界观的剧情任务——查资料变搜集情报、打扫变清理据点污染，也可以纯自由发挥",
+            "📌 任务卡双行显示：上面是剧情任务，下面标注现实对应；点「完成任务」完成的还是现实里那件事，副本预览里也能手动改两边"
+        ]
+    },
+
     {
         version: "1.9.9",
         date: "2026-10-05",
@@ -32955,13 +32968,15 @@ window.renderJournalCrossMountPanel = function () {
         const books = tmChosenBooks(draft);
         const personaText = tmPersonaText(draft);
 
-        let sys = '你是一位擅长把现实任务包装成剧情副本的游戏设计师。请根据用户的计划，设计一个「任务副本」，把用户的任务自然分配到若干幕剧情中。\n' +
+        let sys = '你是一位擅长把现实任务包装成剧情副本的游戏设计师。请根据用户的计划，设计一个「任务副本」。\n' +
             '要求：\n' +
-            '1. 幕数由你根据任务多少与难度决定，1-10 幕之间；每一幕绑定一个具体任务（取自用户计划，可拆分）。\n' +
+            '1. 幕数由你根据任务多少与难度决定，1-10 幕之间；每一幕绑定一个剧情任务。\n' +
             '2. 剧情风格贴合出场角色的人设与世界书设定，轻松、有陪伴感，不要太中二。\n' +
-            '3. 严格按以下格式输出，不要输出任何额外内容：\n' +
+            '3.【任务魔改规则】用户输入的现实任务只是素材，不是剧本。你可以把它们魔改成任何符合当前世界观的剧情任务，也可以自由发挥、生成与现实任务毫无关系的任务。魔改要抓任务的「神韵」而非字面，例如：查资料/学习→搜集情报、破译密文、向线人套话；写报告/赶稿→伪造通关文书、绘制据点地图、誊写咒文卷轴；健身/运动→搬运物资、修筑防御工事、甩掉追捕者；打扫/整理→清理据点污染、排查寄生体；背单词→背诵咒文、记接头暗号；赶DDL→限时拆除炸弹、赶在传送门关闭前修好装置。\n' +
+            '4. 每幕必须保留「现实对应」：<现实任务>里写它对应用户计划中的哪件现实任务（用户点完成任务时，完成的是现实里那件）；纯自由发挥的剧情任务写「无现实对应」。\n' +
+            '5. 严格按以下格式输出，不要输出任何额外内容：\n' +
             '<副本标题>…</副本标题>\n<副本简介>…一句话…</副本简介>\n' +
-            '<幕>\n<幕标题>…</幕标题>\n<绑定任务>…</绑定任务>\n<剧情梗概>…</剧情梗概>\n</幕>\n（重复「幕」块）';
+            '<幕>\n<幕标题>…</幕标题>\n<绑定任务>剧情化的任务…</绑定任务>\n<现实任务>对应的现实任务或「无现实对应」…</现实任务>\n<剧情梗概>…</剧情梗概>\n</幕>\n（重复「幕」块）';
         if (forceCount) sys += '\n4. 本次必须正好生成 ' + forceCount + ' 幕。';
 
         let usr = '';
@@ -33010,7 +33025,7 @@ window.renderJournalCrossMountPanel = function () {
                 const mm = block.match(new RegExp('<' + tag + '>([\\s\\S]*?)</' + tag + '>'));
                 return mm ? mm[1].trim() : '';
             };
-            dungeon.acts.push({ title: g('幕标题') || ('第' + (dungeon.acts.length + 1) + '幕'), task: g('绑定任务'), plot: g('剧情梗概') });
+            dungeon.acts.push({ title: g('幕标题') || ('第' + (dungeon.acts.length + 1) + '幕'), task: g('绑定任务'), realTask: g('现实任务'), plot: g('剧情梗概') });
         }
         return dungeon;
     }
@@ -33034,7 +33049,8 @@ window.renderJournalCrossMountPanel = function () {
             html += '<div class="tm-act-editor">' +
                 '<div style="font-size:12px;color:#999;margin-bottom:4px;">第 ' + (i + 1) + ' 幕</div>' +
                 '<input type="text" class="tm-input tm-act-title" data-idx="' + i + '" value="' + tmEscape(act.title) + '" placeholder="幕标题">' +
-                '<input type="text" class="tm-input tm-act-task" data-idx="' + i + '" value="' + tmEscape(act.task) + '" placeholder="绑定任务">' +
+                '<input type="text" class="tm-input tm-act-task" data-idx="' + i + '" value="' + tmEscape(act.task) + '" placeholder="剧情任务（魔改后）">' +
+                '<input type="text" class="tm-input tm-act-realtask" data-idx="' + i + '" value="' + tmEscape(act.realTask || '') + '" placeholder="现实对应任务">' +
                 (act.plot ? '<div style="font-size:12px;color:#888;margin-top:4px;">' + tmEscape(act.plot) + '</div>' : '') +
                 '</div>';
         });
@@ -33044,6 +33060,7 @@ window.renderJournalCrossMountPanel = function () {
         document.getElementById('tm-dg-title').addEventListener('input', (e) => { dungeon.title = e.target.value; });
         wrap.querySelectorAll('.tm-act-title').forEach(inp => inp.addEventListener('input', (e) => { dungeon.acts[+e.target.dataset.idx].title = e.target.value; }));
         wrap.querySelectorAll('.tm-act-task').forEach(inp => inp.addEventListener('input', (e) => { dungeon.acts[+e.target.dataset.idx].task = e.target.value; }));
+        wrap.querySelectorAll('.tm-act-realtask').forEach(inp => inp.addEventListener('input', (e) => { dungeon.acts[+e.target.dataset.idx].realTask = e.target.value; }));
         document.getElementById('tm-dg-regen').addEventListener('click', () => {
             let n = parseInt(document.getElementById('tm-dg-count').value, 10);
             if (isNaN(n)) n = 3;
@@ -33090,7 +33107,7 @@ window.renderJournalCrossMountPanel = function () {
             charIds: draft.charIds.slice(), worldBookIds: draft.worldBookIds.slice(),
             companions: draft.companionIds.map(id => ({ charId: id, nextAt: now + (1 + Math.random() * 9) * 60000 })),
             pomodoro: { enabled: draft.pomodoroEnabled, minutes: draft.pomodoroMinutes || 20 },
-            acts: d0.acts.map(a => ({ title: a.title, task: a.task, plot: a.plot, status: 'pending', freeTurnsUsed: 0 })),
+            acts: d0.acts.map(a => ({ title: a.title, task: a.task, realTask: a.realTask || '', plot: a.plot, status: 'pending', freeTurnsUsed: 0 })),
             currentAct: 0,
             history: []
         };
@@ -33125,9 +33142,10 @@ window.renderJournalCrossMountPanel = function () {
             sys += '\n【世界书设定】\n' + books.map(w => '· ' + (w.name || '条目') + '：' + String(w.content || '').slice(0, 1200)).join('\n') + '\n';
         }
         sys += '\n【全副本大纲】\n' + session.acts.map((a, i) =>
-            '第' + (i + 1) + '幕「' + a.title + '」（任务：' + (a.task || '自由发挥') + '）' +
+            '第' + (i + 1) + '幕「' + a.title + '」（任务：' + (a.task || '自由发挥') + (a.realTask && a.realTask !== '无现实对应' ? '｜现实：' + a.realTask : '') + '）' +
             (i < session.currentAct ? '【已完成】' : i === session.currentAct ? '【进行中】' : '【未开始】')).join('\n') + '\n';
-        if (act) sys += '\n【当前幕】第' + (session.currentAct + 1) + '幕「' + act.title + '」，绑定任务：' + (act.task || '自由发挥') + '。梗概：' + (act.plot || '无') + '\n';
+        if (act) sys += '\n【当前幕】第' + (session.currentAct + 1) + '幕「' + act.title + '」，剧情任务：' + (act.task || '自由发挥') +
+            (act.realTask && act.realTask !== '无现实对应' ? '（现实对应：' + act.realTask + '，剧情里不要戳破这层包装）' : '') + '。梗概：' + (act.plot || '无') + '\n';
         sys += '\n【规则】\n' +
             '1. 用第二人称带用户体验剧情；文本中穿插动作描写与 NPC 对话，NPC 台词用「角色名：…」开头单独成行。\n' +
             '2. 在用户完成当前幕绑定任务之前，剧情不能推进到下一幕；可以铺垫、互动、催促、鼓励，但不泄露后续剧情。\n' +
@@ -33212,6 +33230,7 @@ window.renderJournalCrossMountPanel = function () {
         banner.innerHTML =
             '<div class="tm-act-head">第 ' + (session.currentAct + 1) + ' / ' + session.acts.length + ' 幕 · ' + tmEscape(act.title) + '</div>' +
             '<div class="tm-task-row"><span class="tm-task-label">🎯 任务</span><span class="tm-task-text">' + tmEscape(act.task || '自由发挥') + '</span></div>' +
+            (act.realTask && act.realTask !== '无现实对应' ? '<div class="tm-task-row"><span class="tm-task-label">📌 现实</span><span class="tm-task-real">' + tmEscape(act.realTask) + '</span></div>' : '') +
             '<div class="tm-act-actions">' +
             '<span class="tm-hint">自由聊天剩余 ' + freeLeft + ' 回合</span>' +
             '<button type="button" class="btn btn-primary btn-small" id="tm-complete-act-btn">✅ 完成任务，推进剧情</button>' +
@@ -33282,7 +33301,7 @@ window.renderJournalCrossMountPanel = function () {
         if (!session || session.status !== 'playing' || tmBusy) return;
         const act = session.acts[session.currentAct];
         act.status = 'done';
-        tmPushSystem(session, '✅ 任务完成：' + (act.task || act.title));
+        tmPushSystem(session, '✅ 任务完成：' + (act.task || act.title) + (act.realTask && act.realTask !== '无现实对应' ? '（现实：' + act.realTask + '）' : ''));
         await saveData();
 
         if (session.currentAct >= session.acts.length - 1) {

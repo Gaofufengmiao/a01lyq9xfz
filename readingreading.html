@@ -12869,6 +12869,23 @@ input:checked + .kkt-slider:before {
     flex-direction: column;
 }
 
+.companion-history-del {
+    flex: none;
+    align-self: center;
+    border: none;
+    background: transparent;
+    color: #ccc;
+    font-size: 12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 4px;
+}
+.companion-history-del:active {
+    background: #ffe3e3;
+    color: #e74c3c;
+}
 .companion-history-item {
     display: flex;
     gap: 8px;
@@ -13942,6 +13959,59 @@ input:checked + .kkt-slider:before {
 }
 #task-mode-screen .content {
     overflow-y: auto;
+}
+.tm-act-timer {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c0392b;
+    font-variant-numeric: tabular-nums;
+    background: #fff;
+    border: 1px solid #f3d9c8;
+    border-radius: 12px;
+    padding: 3px 10px;
+}
+.tm-timer-stop {
+    border: none;
+    background: #f0f0f2;
+    color: #999;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    cursor: pointer;
+    flex: none;
+}
+
+/* v1.9.13 每幕番茄钟配置行 */
+.tm-pomo-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #a08c5b;
+}
+.tm-pomo-select {
+    padding: 2px 4px;
+    border: 1px solid #ecd9b8;
+    border-radius: 8px;
+    font-size: 12px;
+    background: #fff;
+    color: #5c4a1f;
+}
+.tm-pomo-progress {
+    font-weight: 700;
+    color: #c0392b;
+}
+.tm-timer-start {
+    border: none;
+    background: #e8a33d;
+    color: #fff;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
 }
 
 </style>
@@ -18809,8 +18879,37 @@ const globalSettingKeys = [
 ];
 
 
-const appVersion = "1.9.10";
+const appVersion = "1.9.13";
 const updateLog = [
+    {
+        version: "1.9.13",
+        date: "2026-10-05",
+        notes: [
+            "🍅 番茄钟升级：每一幕都能单独设定「几个 × 每个多少分钟」，就在幕横幅上直接改；一幕设多个时会自动一个接一个跑，倒计时显示当前是第几个",
+            "⏱️ 默认值也放宽了：副本首页可设默认个数（1-10）和时长（5-60 分钟），幕内随时可以覆盖；改时长会立即按新时长重新计时"
+        ]
+    },
+
+    {
+        version: "1.9.12",
+        date: "2026-10-05",
+        notes: [
+            "🔧 修复副本聊天室把顶部状态栏挤没的 bug（页面插错了容器）",
+            "🍅 番茄钟改为「开启任务即开启」：每一幕开始自动倒计时，就挂在幕横幅上随时可见，可点 ✕ 停止；不再有幕间弹窗",
+            "🫂 修复陪读/陪练不读世界书的问题：现在 TA 们的提醒消息会带上挂载的世界观设定和你的人设，语气更像本人"
+        ]
+    },
+
+    {
+        version: "1.9.11",
+        date: "2026-10-05",
+        notes: [
+            "👥 共读角色可以多选啦：吐槽时每个选中的 TA 各来一条弹幕，错峰飞过；共读笔记由最后选中的 TA 来写",
+            "🎭 弹幕吐槽更像本人了：提示词改为人设强绑定，语气口癖和梗的品味都必须贴着角色走，不再千人一面",
+            "🗑️ 弹幕可以删除了：历史弹幕列表每条有 ✕，讨论弹窗里也有删除按钮"
+        ]
+    },
+
     {
         version: "1.9.10",
         date: "2026-10-05",
@@ -32700,7 +32799,7 @@ window.renderJournalCrossMountPanel = function () {
             dayPlan: '', weekPlan: '', monthPlan: '',
             personaName: '', personaText: '',
             charIds: [], worldBookIds: [], companionIds: [],
-            pomodoroEnabled: true, pomodoroMinutes: 20,
+            pomodoroEnabled: true, pomodoroMinutes: 20, pomodoroCount: 1,
             dungeon: null   // {title, synopsis, acts:[{title, task, plot}]}
         };
     }
@@ -32780,8 +32879,10 @@ window.renderJournalCrossMountPanel = function () {
 
     // ---------------- 屏幕 DOM ----------------
     function tmEnsureScreens() {
+        // v1.9.12：屏幕必须插进 .phone-screen（屏幕容器），否则激活时会盖住手机状态栏导致错位
+        const screenParent = document.querySelector('.phone-screen') || document.body;
         if (!document.getElementById('task-mode-screen')) {
-            document.body.insertAdjacentHTML('beforeend', [
+            screenParent.insertAdjacentHTML('beforeend', [
                 '<div id="task-mode-screen" class="screen">',
                 '    <header class="app-header">',
                 '        <button class="back-btn" data-target="home-screen">‹</button>',
@@ -32793,7 +32894,7 @@ window.renderJournalCrossMountPanel = function () {
             ].join('\n'));
         }
         if (!document.getElementById('task-room-screen')) {
-            document.body.insertAdjacentHTML('beforeend', [
+            screenParent.insertAdjacentHTML('beforeend', [
                 '<div id="task-room-screen" class="screen">',
                 '    <header class="app-header">',
                 '        <button class="back-btn" id="task-room-back-btn">‹</button>',
@@ -32808,7 +32909,6 @@ window.renderJournalCrossMountPanel = function () {
                 '        <input type="text" id="task-input" placeholder="和副本里的大家聊聊…" autocomplete="off">',
                 '        <button id="task-send-btn" class="send-btn">发送</button>',
                 '    </footer>',
-                '    <div id="task-pomodoro-overlay" class="task-overlay" style="display:none;"></div>',
                 '</div>'
             ].join('\n'));
             document.getElementById('task-room-back-btn').addEventListener('click', () => switchScreen('task-mode-screen'));
@@ -32899,11 +32999,13 @@ window.renderJournalCrossMountPanel = function () {
         html += '</div><div class="tm-hint" style="margin-top:6px;">副本进行中，陪读/陪练每隔 1-10 分钟随机发来一段提醒/鼓励/检查</div></div>';
 
         // 番茄钟
-        html += '<div class="tm-card"><div class="tm-card-title">🍅 幕间番茄钟</div>' +
+        html += '<div class="tm-card"><div class="tm-card-title">🍅 番茄钟</div>' +
             '<label style="display:flex;align-items:center;gap:8px;font-size:14px;">' +
-            '<input type="checkbox" id="tm-pomo-enabled"' + (draft.pomodoroEnabled ? ' checked' : '') + '> 每一幕之间提供番茄钟休息</label>' +
-            '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;">时长' +
-            '<input type="number" id="tm-pomo-minutes" class="tm-minutes-input" min="15" max="25" value="' + (draft.pomodoroMinutes || 20) + '"> 分钟（15-25）</div></div>';
+            '<input type="checkbox" id="tm-pomo-enabled"' + (draft.pomodoroEnabled ? ' checked' : '') + '> 每一幕自动开始番茄钟</label>' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;">每幕默认' +
+            '<input type="number" id="tm-pomo-count-cfg" class="tm-minutes-input" min="1" max="10" value="' + (draft.pomodoroCount || 1) + '"> 个 × ' +
+            '<input type="number" id="tm-pomo-minutes" class="tm-minutes-input" min="5" max="60" value="' + (draft.pomodoroMinutes || 20) + '"> 分钟</div>' +
+            '<div class="tm-hint" style="margin-top:6px;">进入副本后，每一幕还能单独改个数和时长</div></div>';
 
         // 生成副本
         html += '<button type="button" class="btn btn-primary" id="tm-generate-btn" style="width:100%;padding:12px;font-size:15px;">✨ 生成副本</button>' +
@@ -32936,9 +33038,16 @@ window.renderJournalCrossMountPanel = function () {
         document.getElementById('tm-pomo-minutes').addEventListener('change', (e) => {
             let v = parseInt(e.target.value, 10);
             if (isNaN(v)) v = 20;
-            v = Math.max(15, Math.min(25, v));
+            v = Math.max(5, Math.min(60, v));
             e.target.value = v;
             draft.pomodoroMinutes = v;
+        });
+        document.getElementById('tm-pomo-count-cfg').addEventListener('change', (e) => {
+            let v = parseInt(e.target.value, 10);
+            if (isNaN(v)) v = 1;
+            v = Math.max(1, Math.min(10, v));
+            e.target.value = v;
+            draft.pomodoroCount = v;
         });
         document.getElementById('tm-generate-btn').addEventListener('click', () => tmGenerateDungeon());
         const contBtn = document.getElementById('tm-continue-btn');
@@ -33106,7 +33215,7 @@ window.renderJournalCrossMountPanel = function () {
             personaName: draft.personaName, personaText: tmPersonaText(draft),
             charIds: draft.charIds.slice(), worldBookIds: draft.worldBookIds.slice(),
             companions: draft.companionIds.map(id => ({ charId: id, nextAt: now + (1 + Math.random() * 9) * 60000 })),
-            pomodoro: { enabled: draft.pomodoroEnabled, minutes: draft.pomodoroMinutes || 20 },
+            pomodoro: { enabled: draft.pomodoroEnabled, minutes: draft.pomodoroMinutes || 20, count: draft.pomodoroCount || 1 },
             acts: d0.acts.map(a => ({ title: a.title, task: a.task, realTask: a.realTask || '', plot: a.plot, status: 'pending', freeTurnsUsed: 0 })),
             currentAct: 0,
             history: []
@@ -33120,6 +33229,7 @@ window.renderJournalCrossMountPanel = function () {
         switchScreen('task-room-screen');
         tmPushSystem(session, '副本《' + session.title + '》开启！' + (session.synopsis || ''));
         await tmGmNarrate('opening');
+        tmActTimerStart(session);   // v1.9.12：开启任务即开启番茄钟
     }
 
     // ---------------- GM 上下文 ----------------
@@ -33227,15 +33337,67 @@ window.renderJournalCrossMountPanel = function () {
         if (!playing) {
             banner.innerHTML = '<div class="tm-act-head">副本已结束 · 完成 ' + (session.completedActs || 0) + ' / ' + session.acts.length + ' 幕</div>';
         } else {
+        // v1.9.13：番茄钟按幕手动设定「个数 × 分钟」，老存档自动补默认值
+        if (act.pomoTotal == null) act.pomoTotal = (session.pomodoro && session.pomodoro.count) || 1;
+        if (act.pomoMinutes == null) act.pomoMinutes = (session.pomodoro && session.pomodoro.minutes) || 20;
+        if (act.pomoDone == null) act.pomoDone = 0;
+        const pomoOn = !!(session.pomodoro && session.pomodoro.enabled);
+        const timerRunning = !!(session.actTimerEndAt && session.actTimerEndAt > Date.now());
+        let pomoHtml = '';
+        if (pomoOn) {
+            const countOpts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => '<option value="' + n + '"' + (act.pomoTotal === n ? ' selected' : '') + '>' + n + '</option>').join('');
+            const minOpts = [5, 10, 15, 20, 25, 30, 45, 60].map(n => '<option value="' + n + '"' + (act.pomoMinutes === n ? ' selected' : '') + '>' + n + '</option>').join('');
+            pomoHtml = '<div class="tm-pomo-row">🍅 本幕' +
+                '<select class="tm-pomo-select" id="tm-pomo-count">' + countOpts + '</select>个 × ' +
+                '<select class="tm-pomo-select" id="tm-pomo-min">' + minOpts + '</select>分钟' +
+                '<span class="tm-pomo-progress">' + Math.min(act.pomoDone, act.pomoTotal) + '/' + act.pomoTotal + '</span>' +
+                (timerRunning
+                    ? '<span class="tm-act-timer" id="tm-act-timer">🍅 --:--</span><button type="button" class="tm-timer-stop" id="tm-timer-stop" title="停止当前番茄钟">✕</button>'
+                    : (act.pomoDone < act.pomoTotal
+                        ? '<button type="button" class="tm-timer-start" id="tm-timer-start">▶ 开始</button>'
+                        : '<span class="tm-pomo-progress">✓ 完成</span>')) +
+                '</div>';
+        }
         banner.innerHTML =
             '<div class="tm-act-head">第 ' + (session.currentAct + 1) + ' / ' + session.acts.length + ' 幕 · ' + tmEscape(act.title) + '</div>' +
             '<div class="tm-task-row"><span class="tm-task-label">🎯 任务</span><span class="tm-task-text">' + tmEscape(act.task || '自由发挥') + '</span></div>' +
             (act.realTask && act.realTask !== '无现实对应' ? '<div class="tm-task-row"><span class="tm-task-label">📌 现实</span><span class="tm-task-real">' + tmEscape(act.realTask) + '</span></div>' : '') +
+            pomoHtml +
             '<div class="tm-act-actions">' +
             '<span class="tm-hint">自由聊天剩余 ' + freeLeft + ' 回合</span>' +
             '<button type="button" class="btn btn-primary btn-small" id="tm-complete-act-btn">✅ 完成任务，推进剧情</button>' +
             '</div>';
         document.getElementById('tm-complete-act-btn').addEventListener('click', tmCompleteAct);
+        if (pomoOn) {
+            document.getElementById('tm-pomo-count').addEventListener('change', async (e) => {
+                act.pomoTotal = parseInt(e.target.value, 10) || 1;
+                if (act.pomoDone >= act.pomoTotal) tmActTimerStop(true);
+                await saveData();
+                tmRenderRoom();
+            });
+            document.getElementById('tm-pomo-min').addEventListener('change', async (e) => {
+                act.pomoMinutes = parseInt(e.target.value, 10) || 20;
+                if (session.actTimerEndAt && session.actTimerEndAt > Date.now()) {
+                    session.actTimerEndAt = Date.now() + act.pomoMinutes * 60000;
+                    showToast('已按新时长重新计时');
+                }
+                await saveData();
+                tmRenderRoom();
+            });
+            const startBtn = document.getElementById('tm-timer-start');
+            if (startBtn) startBtn.addEventListener('click', () => tmActTimerStart(session));
+            const timerStopBtn = document.getElementById('tm-timer-stop');
+            if (timerStopBtn) timerStopBtn.addEventListener('click', async () => {
+                tmActTimerStop(true);
+                await saveData();
+                tmRenderRoom();
+                showToast('已停止当前番茄钟，点 ▶ 可重新开始');
+            });
+        }
+        // 回到房间时恢复倒计时跳动
+        if (session.actTimerEndAt && session.actTimerEndAt > Date.now() && !tmPomodoroTimer) {
+            tmActTimerTickLoop();
+        }
         }
 
         // 消息
@@ -33306,15 +33468,12 @@ window.renderJournalCrossMountPanel = function () {
 
         if (session.currentAct >= session.acts.length - 1) {
             // 最终幕完成 → 完结
+            tmActTimerStop(true);
             await tmGmNarrate('finale');
             await tmFinishDungeon(true);
             return;
         }
-        if (session.pomodoro && session.pomodoro.enabled) {
-            tmShowPomodoroChoice(session);
-        } else {
-            await tmAdvanceAct();
-        }
+        await tmAdvanceAct();
         tmRenderRoom();
     }
 
@@ -33327,69 +33486,68 @@ window.renderJournalCrossMountPanel = function () {
         await saveData();
         tmRenderRoom();
         await tmGmNarrate('opening');
+        tmActTimerStart(session);   // v1.9.12：每一幕开始自动开新的番茄钟
     }
 
-    // ---------------- 番茄钟 ----------------
-    function tmShowPomodoroChoice(session) {
-        const overlay = document.getElementById('task-pomodoro-overlay');
-        const minutes = session.pomodoro.minutes || 20;
-        overlay.style.display = 'flex';
-        overlay.innerHTML =
-            '<div class="tm-pomo-card">' +
-            '<div style="font-size:32px;">🍅</div>' +
-            '<div style="font-size:16px;font-weight:700;margin:6px 0;">幕间休息</div>' +
-            '<div style="font-size:13px;color:#888;margin-bottom:14px;">要来一个 ' + minutes + ' 分钟的番茄钟吗？<br>陪读/陪练会时不时来看看你</div>' +
-            '<button type="button" class="btn btn-primary" id="tm-pomo-start" style="width:100%;padding:10px;">开始番茄钟（' + minutes + ' 分钟）</button>' +
-            '<button type="button" class="btn btn-secondary" id="tm-pomo-skip" style="width:100%;padding:10px;margin-top:8px;">不用了，直接继续剧情</button>' +
-            '</div>';
-        document.getElementById('tm-pomo-start').addEventListener('click', () => tmStartPomodoro(session, minutes));
-        document.getElementById('tm-pomo-skip').addEventListener('click', async () => {
-            tmStopPomodoro();
-            overlay.style.display = 'none';
-            await tmAdvanceAct();
-        });
-    }
-
-    function tmStartPomodoro(session, minutes) {
-        const overlay = document.getElementById('task-pomodoro-overlay');
-        const endAt = Date.now() + minutes * 60000;
-        session.pomodoro.runningUntil = endAt;
+    // ---------------- 番茄钟（v1.9.13：开启任务即开启；每幕可单独设定个数 × 分钟，自动一个接一个） ----------------
+    function tmActTimerStart(session) {
+        if (!session || !session.pomodoro || !session.pomodoro.enabled) return;
+        const act = session.acts[session.currentAct];
+        if (!act) return;
+        if (act.pomoTotal == null) act.pomoTotal = session.pomodoro.count || 1;
+        if (act.pomoMinutes == null) act.pomoMinutes = session.pomodoro.minutes || 20;
+        if (act.pomoDone == null) act.pomoDone = 0;
+        if (act.pomoDone >= act.pomoTotal) { tmRenderRoom(); return; }
+        session.actTimerEndAt = Date.now() + act.pomoMinutes * 60000;
         saveData();
-        const tick = () => {
-            const remain = endAt - Date.now();
-            if (remain <= 0) {
-                tmStopPomodoro();
-                overlay.innerHTML = '<div class="tm-pomo-card"><div style="font-size:32px;">🎉</div>' +
-                    '<div style="font-size:16px;font-weight:700;margin:6px 0;">番茄钟完成！</div>' +
-                    '<button type="button" class="btn btn-primary" id="tm-pomo-done" style="width:100%;padding:10px;">继续剧情</button></div>';
-                document.getElementById('tm-pomo-done').addEventListener('click', async () => {
-                    overlay.style.display = 'none';
-                    await tmAdvanceAct();
-                });
-                showToast('番茄钟完成！');
+        tmActTimerTickLoop();
+        tmRenderRoom();
+    }
+
+    function tmActTimerStop(clearField) {
+        if (tmPomodoroTimer) { clearInterval(tmPomodoroTimer); tmPomodoroTimer = null; }
+        if (clearField) {
+            const s = tmActiveSession();
+            if (s) delete s.actTimerEndAt;
+        }
+    }
+
+    function tmActTimerTickLoop() {
+        if (tmPomodoroTimer) { clearInterval(tmPomodoroTimer); tmPomodoroTimer = null; }
+        tmPomodoroTimer = setInterval(() => {
+            const s = tmActiveSession();
+            if (!s || s.status !== 'playing' || !s.actTimerEndAt) {
+                tmActTimerStop(false);
                 return;
             }
-            const mm = Math.floor(remain / 60000), ss = Math.floor((remain % 60000) / 1000);
-            overlay.innerHTML = '<div class="tm-pomo-card">' +
-                '<div style="font-size:32px;">🍅</div>' +
-                '<div style="font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;margin:6px 0;">' + String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0') + '</div>' +
-                '<div style="font-size:13px;color:#888;margin-bottom:14px;">专注中…结束后进入下一幕</div>' +
-                '<button type="button" class="btn btn-secondary" id="tm-pomo-quit" style="width:100%;padding:10px;">提前结束番茄钟</button></div>';
-            const quit = document.getElementById('tm-pomo-quit');
-            if (quit) quit.addEventListener('click', async () => {
-                tmStopPomodoro();
-                overlay.style.display = 'none';
-                await tmAdvanceAct();
-            }, { once: true });
-            tmPomodoroTimer = setTimeout(tick, 1000);
-        };
-        tick();
-    }
-
-    function tmStopPomodoro() {
-        if (tmPomodoroTimer) { clearTimeout(tmPomodoroTimer); tmPomodoroTimer = null; }
-        const session = tmActiveSession();
-        if (session && session.pomodoro) delete session.pomodoro.runningUntil;
+            const remain = s.actTimerEndAt - Date.now();
+            if (remain <= 0) {
+                const act0 = s.acts[s.currentAct];
+                if (act0) {
+                    act0.pomoDone = (act0.pomoDone || 0) + 1;
+                    if (act0.pomoDone < (act0.pomoTotal || 1)) {
+                        // 还有下一个番茄钟：自动接续
+                        s.actTimerEndAt = Date.now() + (act0.pomoMinutes || 20) * 60000;
+                        saveData();
+                        showToast('🍅 第 ' + act0.pomoDone + ' 个番茄钟完成！自动开始下一个');
+                        tmRenderRoom();
+                        return;
+                    }
+                }
+                tmActTimerStop(true);
+                saveData();
+                showToast('🍅 本幕番茄钟全部完成！喝口水，继续推进任务吧');
+                tmRenderRoom();
+                return;
+            }
+            const el = document.getElementById('tm-act-timer');
+            if (el) {
+                const act1 = s.acts[s.currentAct];
+                const prefix = (act1 && (act1.pomoTotal || 1) > 1) ? (Math.min((act1.pomoDone || 0) + 1, act1.pomoTotal) + '/' + act1.pomoTotal + ' ') : '';
+                const mm = Math.floor(remain / 60000), ss = Math.floor((remain % 60000) / 1000);
+                el.textContent = '🍅 ' + prefix + String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+            }
+        }, 1000);
     }
 
     // ---------------- 结束与总结 ----------------
@@ -33400,9 +33558,7 @@ window.renderJournalCrossMountPanel = function () {
         if (!autoCompleted) {
             if (!confirm('结束当前副本？结束后可以生成总结并挂载到记忆里。')) return;
         }
-        tmStopPomodoro();
-        const overlay = document.getElementById('task-pomodoro-overlay');
-        if (overlay) overlay.style.display = 'none';
+        tmActTimerStop(true);
         session.status = 'finished';
         session.finishedAt = Date.now();
         session.completedActs = session.acts.filter(a => a.status === 'done').length;
@@ -33535,8 +33691,16 @@ window.renderJournalCrossMountPanel = function () {
         try {
             const act = session.acts[session.currentAct];
             const name = char.realName || char.remarkName || char.name || '角色';
-            const sys = '你是 ' + name + '。' + (char.persona || '') + '\n' +
-                '你现在是用户的陪读/陪练伙伴，用户正在任务副本《' + session.title + '》中努力。';
+            // v1.9.12：陪读/陪练同样注入挂载的世界书设定与用户人设，否则 TA 不像本人
+            const cpBooks = (db.worldBooks || []).filter(w => session.worldBookIds.includes(w.id) && w.type !== 'folder');
+            let sys = '你是 ' + name + '。以下是你的完整人设，你必须严格以这个人的性格、说话方式和口癖发言：\n' + (char.persona || '（无特定人设）') + '\n';
+            if (cpBooks.length > 0) {
+                sys += '\n【世界观设定】\n' + cpBooks.map(w => '· ' + (w.name || '条目') + '：' + String(w.content || '').slice(0, 800)).join('\n') + '\n';
+            }
+            if (session.personaText) {
+                sys += '\n【用户人设】\n' + session.personaText + '\n';
+            }
+            sys += '\n你现在是用户的陪读/陪练伙伴，用户正在任务副本《' + session.title + '》中努力。';
             const usr = '当前是第' + (session.currentAct + 1) + '幕「' + act.title + '」，用户手头任务：' + (act.task || '自由发挥') + '。\n' +
                 '请写一段 100-150 字的消息发给用户，内容从「提醒 / 鼓励 / 检查进度」中任选一种，必须同时包含你的动作描写和你说的话，一段话即可，直接输出这段话本身，不要任何标签或解释。';
             const text = (await tmCallAI(sys, usr)).trim();
@@ -61699,11 +61863,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildSystemPrompt(char, bookTitle, chapterIndex, chapterTitle) {
         const charName = getCharName(char);
         const userName = getUserName(char);
-        const desc = (char.persona || char.description || '').slice(0, 800);
+        const desc = (char.persona || char.description || '').slice(0, 1200);
         let prompt = `你是${charName}。`;
-        if (desc) prompt += `\n以下是你的人设：\n${desc}\n`;
+        if (desc) prompt += `\n以下是你的完整人设，你必须严格以这个人的性格、说话方式、口癖和价值观发言：\n${desc}\n`;
         const chapterLabel = `第${chapterIndex + 1}章${chapterTitle ? `「${chapterTitle}」` : ''}`;
-        prompt += `\n你正和 ${userName} 一起读《${bookTitle}》${chapterLabel}。TA 读到这里，想和你聊这一段。以你的性格回应，像并肩读书时的私语，200 字内，不要书评腔。`;
+        prompt += `\n你正和 ${userName} 一起读《${bookTitle}》${chapterLabel}。TA 读到这里，想和你聊这一段。以你的性格回应，像并肩读书时的私语，200 字内，不要书评腔；语气、用词和梗的品味都必须像${charName}本人，不要跳出角色的时代与世界观。`;
         return prompt;
     }
 
@@ -61987,7 +62151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="reader-settings-close" id="reader-companion-close">×</button>
                 </div>
                 <div class="reader-companion-content">
-                    <div class="companion-section-title">选择共读角色</div>
+                    <div class="companion-section-title">选择共读角色（可多选，吐槽时每人各来一条）</div>
                     <div class="companion-char-row" id="companion-char-row"></div>
                     <div class="companion-collapse" id="companion-wb-toggle">
                         <span>世界书设定（勾选注入共读上下文）</span>
@@ -62027,6 +62191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img class="coread-avatar" id="discuss-char-avatar" src="" alt="">
                     <span class="coread-discuss-name" id="discuss-char-name">角色</span>
                     <span class="coread-discuss-title">讨论这条弹幕</span>
+                    <button class="reader-settings-close" id="discuss-del-btn" title="删除这条弹幕" style="margin-left:auto;margin-right:6px;">🗑</button>
                     <button class="reader-settings-close" id="discuss-close-btn">×</button>
                 </div>
                 <div class="coread-discuss-quote" id="discuss-quote"></div>
@@ -62068,7 +62233,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const discussSendBtn = document.getElementById('discuss-send-btn');
     const discussCloseBtn = document.getElementById('discuss-close-btn');
 
-    let selectedCharId = localStorage.getItem('coread_last_char') || null;
+    // v1.9.11：共读角色改为多选（localStorage 'coread_last_chars' JSON 数组，兼容旧的单选键）
+    let selectedCharIds = [];
+    try {
+        const parsed = JSON.parse(localStorage.getItem('coread_last_chars') || '[]');
+        if (Array.isArray(parsed)) selectedCharIds = parsed;
+    } catch (e) { selectedCharIds = []; }
+    const legacyChar = localStorage.getItem('coread_last_char');
+    if (!selectedCharIds.length && legacyChar) selectedCharIds = [legacyChar];
+    let wbEditCharId = selectedCharIds[0] || null;  // 世界书勾选针对的角色（最近点选）
+
+    function saveSelectedChars() {
+        localStorage.setItem('coread_last_chars', JSON.stringify(selectedCharIds));
+    }
+    function getSelectedChars() {
+        return selectedCharIds.map(findChar).filter(Boolean);
+    }
+    function getPrimaryChar() {
+        const chars = getSelectedChars();
+        return chars.length ? chars[chars.length - 1] : null;  // 笔记等单角色功能用最后选中的
+    }
     let danmakuBusy = false;
     let noteBusy = false;
     let discussBusy = false;
@@ -62215,21 +62399,27 @@ document.addEventListener('DOMContentLoaded', () => {
             charRowEl.innerHTML = '<div class="companion-empty-hint">还没有角色，先去创建一个角色吧</div>';
             return;
         }
-        if (!selectedCharId || !findChar(selectedCharId)) {
-            selectedCharId = chars[0].id;
-        }
+        // 清理已删除角色的残留勾选
+        selectedCharIds = selectedCharIds.filter(id => findChar(id));
         charRowEl.innerHTML = chars.map(char => `
-            <div class="companion-char-item ${char.id === selectedCharId ? 'active' : ''}" data-char-id="${escapeHtml(char.id)}">
+            <div class="companion-char-item ${selectedCharIds.includes(char.id) ? 'active' : ''}" data-char-id="${escapeHtml(char.id)}">
                 <img class="companion-char-avatar" src="${escapeHtml(char.avatar || FALLBACK_AVATAR)}" alt="">
                 <span class="companion-char-name">${escapeHtml(getCharName(char))}</span>
             </div>
         `).join('');
         charRowEl.querySelectorAll('.companion-char-item').forEach(item => {
             item.addEventListener('click', () => {
-                selectedCharId = item.dataset.charId;
-                localStorage.setItem('coread_last_char', selectedCharId);
+                const id = item.dataset.charId;
+                const idx = selectedCharIds.indexOf(id);
+                if (idx >= 0) {
+                    selectedCharIds.splice(idx, 1);
+                } else {
+                    selectedCharIds.push(id);
+                }
+                wbEditCharId = id;  // 世界书勾选跟随最近点选的角色
+                saveSelectedChars();
                 renderCharRow();
-                renderWbList(); // 切换角色后重新加载对应勾选状态
+                renderWbList(); // 切换后重新加载对应勾选状态
             });
         });
     }
@@ -62243,8 +62433,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const ctx = getReaderCtx();
         const bookId = (ctx && ctx.currentBook) ? ctx.currentBook.id : null;
-        const checked = (bookId && selectedCharId) ? getCheckedWbIds(bookId, selectedCharId) : [];
-        wbListEl.innerHTML = books.map(wb => `
+        if (!wbEditCharId || !findChar(wbEditCharId)) wbEditCharId = selectedCharIds[0] || null;
+        const checked = (bookId && wbEditCharId) ? getCheckedWbIds(bookId, wbEditCharId) : [];
+        const wbTarget = wbEditCharId ? findChar(wbEditCharId) : null;
+        const wbHint = wbTarget ? `<div class="companion-empty-hint" style="padding:2px 0 6px;">勾选针对：${escapeHtml(getCharName(wbTarget))}（点其他角色头像可切换）</div>` : '' ;
+        wbListEl.innerHTML = wbHint + books.map(wb => `
             <label class="companion-wb-item">
                 <input type="checkbox" data-wb-id="${escapeHtml(wb.id)}" ${checked.includes(wb.id) ? 'checked' : ''}>
                 <span>${escapeHtml(wb.name || '未命名')}</span>
@@ -62254,14 +62447,14 @@ document.addEventListener('DOMContentLoaded', () => {
             box.addEventListener('change', () => {
                 const ctx2 = getReaderCtx();
                 const bookId2 = (ctx2 && ctx2.currentBook) ? ctx2.currentBook.id : null;
-                if (!bookId2 || !selectedCharId) {
+                if (!bookId2 || !wbEditCharId) {
                     toast('请先加载书籍并选择角色');
                     box.checked = false;
                     return;
                 }
                 const ids = Array.from(wbListEl.querySelectorAll('input[type="checkbox"]:checked'))
                     .map(b => b.dataset.wbId);
-                setCheckedWbIds(bookId2, selectedCharId, ids);
+                setCheckedWbIds(bookId2, wbEditCharId, ids);
             });
         });
     }
@@ -62334,11 +62527,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // ---------- 弹幕生成与飞过动画 ----------
+    // ---------- 弹幕生成与飞过动画（v1.9.11：多角色批量，每人各来一条） ----------
     async function fireDanmaku() {
-        const char = findChar(selectedCharId);
-        if (!char) {
-            toast('请先选择共读角色');
+        const chars = getSelectedChars();
+        if (chars.length === 0) {
+            toast('请先选择共读角色（可多选）');
             return;
         }
         const ctx = getReaderCtx();
@@ -62347,7 +62540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (danmakuBusy) {
-            toast('TA 正在吐槽中，请稍候');
+            toast('TA 们正在吐槽中，请稍候');
             return;
         }
         const { currentBook, currentChapters, currentChapterIndex } = ctx;
@@ -62359,44 +62552,60 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const charName = getCharName(char);
-        const userName = getUserName(char);
-        const desc = (char.persona || char.description || '').slice(0, 800);
-        let systemPrompt = `你是${charName}。`;
-        if (desc) systemPrompt += `\n以下是你的人设：\n${desc}\n`;
-        systemPrompt += buildWorldBookBlock(currentBook.id, char.id);
-        systemPrompt += `\n你正和 ${userName} 一起读《${currentBook.title}》第${currentChapterIndex + 1}章「${chapter.title || ''}」。针对下面的原文，以你的性格发一条吐槽/点评——像弹幕一样短促有力，60字以内，口语化，可以损可以夸可以玩梗，不要书评腔，不要动作描写，只输出吐槽本体一句话。`;
-
-        const messages = [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: `【吐槽范围：${range.rangeDesc}】\n${range.text}` }
-        ];
-
         danmakuBusy = true;
-        toast('正在等待 TA 的吐槽...');
+        let firedCount = 0;
         try {
-            const text = await callLlm(messages);
-            const id = await dexieDB.reader_danmaku.add({
-                bookId: currentBook.id,
-                charId: char.id,
-                chapterIndex: currentChapterIndex,
-                rangeType: range.rangeType,
-                rangeDesc: range.rangeDesc,
-                excerpt: range.text.slice(0, 500),
-                text: text,
-                thread: [],
-                timestamp: Date.now()
-            });
-            // 弹幕动画层级低于面板遮罩（z-index 210），先关闭共读面板再发射
-            closePanel();
-            launchDanmaku({ id: id, charId: char.id, text: text });
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                toast(chars.length > 1 ? `正在等待吐槽（${i + 1}/${chars.length}）…` : '正在等待 TA 的吐槽...');
+                try {
+                    const text = await callLlm(buildDanmakuMessages(char, currentBook, currentChapterIndex, chapter, range));
+                    const id = await dexieDB.reader_danmaku.add({
+                        bookId: currentBook.id,
+                        charId: char.id,
+                        chapterIndex: currentChapterIndex,
+                        rangeType: range.rangeType,
+                        rangeDesc: range.rangeDesc,
+                        excerpt: range.text.slice(0, 500),
+                        text: text,
+                        thread: [],
+                        timestamp: Date.now()
+                    });
+                    firedCount++;
+                    // 弹幕动画层级低于面板遮罩（z-index 210），第一条前关闭共读面板，后续错峰发射
+                    if (firedCount === 1) closePanel();
+                    setTimeout(() => launchDanmaku({ id: id, charId: char.id, text: text }), firedCount * 900);
+                } catch (err) {
+                    console.error(`弹幕生成失败(${getCharName(char)}):`, err);
+                    toast(`${getCharName(char)}：${err.message || '吐槽失败'}`);
+                }
+            }
             renderHistory();
-        } catch (error) {
-            console.error('弹幕生成失败:', error);
-            toast(error.message || '弹幕生成失败');
         } finally {
             danmakuBusy = false;
         }
+    }
+
+    // 弹幕提示词：人设优先绑定（v1.9.11 修复"吐槽不像本人"）
+    function buildDanmakuMessages(char, currentBook, currentChapterIndex, chapter, range) {
+        const charName = getCharName(char);
+        const userName = getUserName(char);
+        const desc = (char.persona || char.description || '').slice(0, 1200);
+        let systemPrompt = `你是${charName}。`;
+        if (desc) {
+            systemPrompt += `\n以下是你的完整人设，你必须严格以这个人的性格、说话方式、口癖和价值观发言：\n${desc}\n`;
+        }
+        systemPrompt += buildWorldBookBlock(currentBook.id, char.id);
+        systemPrompt += `\n你正和 ${userName} 一起读《${currentBook.title}》第${currentChapterIndex + 1}章「${chapter.title || ''}」。针对下面的原文，发一条弹幕式的吐槽/点评。要求：\n` +
+            `1. 语气、用词、梗的品味都必须像${charName}本人会发的——不同角色看到同一段原文，反应必须明显不一样；\n` +
+            `2. 60字以内，口语化，不要书评腔，不要动作描写，只输出弹幕本体一句话；\n` +
+            `3. 可以损可以夸，但方向和分寸由人设决定（毒舌的就损，温柔的就夸，严肃的就认真点评）；\n` +
+            `4. 不要跳出角色的时代、世界观和知识范围，不要玩不属于TA的梗；\n` +
+            `5. 不要用"作为AI"之类的表述，你就是${charName}本人。`;
+        return [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `【吐槽范围：${range.rangeDesc}】\n${range.text}` }
+        ];
     }
 
     // 发射弹幕 pill：右→左飞过，top 随机 12%~68%，时长 8~13s，animationend 移除
@@ -62477,6 +62686,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     discussCloseBtn.addEventListener('click', closeDiscuss);
+    document.getElementById('discuss-del-btn').addEventListener('click', async () => {
+        if (!currentDiscussId) return;
+        if (!confirm('删除这条弹幕（连同下面的讨论）？')) return;
+        try {
+            await dexieDB.reader_danmaku.delete(currentDiscussId);
+        } catch (err) {
+            console.error('删除弹幕失败:', err);
+        }
+        closeDiscuss();
+        renderHistory();
+        toast('弹幕已删除');
+    });
     discussModal.addEventListener('click', (e) => {
         if (e.target === discussModal) closeDiscuss();
     });
@@ -62607,19 +62828,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="companion-history-text">${escapeHtml(preview)}</div>
                     </div>
+                    <button class="companion-history-del" data-id="${r.id}" title="删除这条弹幕">✕</button>
                 </div>
             `;
         }).join('');
         historyListEl.querySelectorAll('.companion-history-item').forEach(item => {
             item.addEventListener('click', () => openDiscuss(parseInt(item.dataset.id)));
         });
+        historyListEl.querySelectorAll('.companion-history-del').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!confirm('删除这条弹幕（连同下面的讨论）？')) return;
+                try {
+                    await dexieDB.reader_danmaku.delete(parseInt(btn.dataset.id));
+                } catch (err) {
+                    console.error('删除弹幕失败:', err);
+                }
+                renderHistory();
+                toast('弹幕已删除');
+            });
+        });
     }
 
     // ---------- 读书笔记生成（共读笔记 / TA的笔记） ----------
     async function generateNote(type) {
-        const char = findChar(selectedCharId);
+        const char = getPrimaryChar();
         if (!char) {
-            toast('请先选择共读角色');
+            toast('请先选择共读角色（笔记由最后选中的 TA 来写）');
             return;
         }
         const ctx = getReaderCtx();
@@ -62649,9 +62884,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
         const charName = getCharName(char);
         const userName = getUserName(char);
-        const desc = (char.persona || char.description || '').slice(0, 800);
+        const desc = (char.persona || char.description || '').slice(0, 1200);
         let systemPrompt = `你是${charName}。`;
-        if (desc) systemPrompt += `\n以下是你的人设：\n${desc}\n`;
+        if (desc) systemPrompt += `\n以下是你的完整人设，你必须严格以这个人的性格、说话方式、口癖和价值观来写：\n${desc}\n`;
         systemPrompt += buildWorldBookBlock(currentBook.id, char.id);
 
         let userContent = '';
